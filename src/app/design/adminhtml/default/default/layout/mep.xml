@@ -11,11 +11,18 @@
         <reference name="head">
             <action method="addItem">
                 <type>skin_js</type>
+                <script>jquery.min.js</script>
+                <params>group="mep"</params>
+            </action>
+            <action method="addItem">
+                <type>skin_js</type>
                 <script>chosen/chosen.proto.js</script>
+                <params>group="mep"</params>
             </action>
             <action method="addItem">
                 <type>skin_js</type>
                 <script>mep.js</script>
+                <params>group="mep"</params>
             </action>
             <action method="addItem">
                 <type>js</type>
@@ -49,16 +56,20 @@
             <action method="addCss">
                 <name>lib/prototype/windows/themes/magento.css</name>
             </action>
-            <action method="addItem">
-                <type>skin_js</type>
-                <script>jquery.min.js</script>
-            </action>
+
             <action method="addItem">
                 <type>skin_js</type>
                 <script>highlighttextarea/jquery.highlighttextarea.min.js</script>
             </action>
             <action method="addCss">
                 <name>highlighttextarea/jquery.highlighttextarea.min.css</name>
+            </action>
+            <action method="addItem">
+                <type>skin_js</type>
+                <script>jqueryui/jquery-ui.min.js</script>
+            </action>
+            <action method="addCss">
+                <name>jqueryui/jquery-ui.min.css</name>
             </action>
         </reference>
     </adminhtml_profile_edit>
@@ -165,11 +176,18 @@
             </action>
             <action method="addItem">
                 <type>skin_js</type>
+                <script>jquery.min.js</script>
+                <params>group="mep"</params>
+            </action>
+            <action method="addItem">
+                <type>skin_js</type>
                 <script>chosen/chosen.proto.js</script>
+                <params>group="mep"</params>
             </action>
             <action method="addItem">
                 <type>skin_js</type>
                 <script>mep.js</script>
+                <params>group="mep"</params>
             </action>
             <action method="addItem">
                 <type>js</type>

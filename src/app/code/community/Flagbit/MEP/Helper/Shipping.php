@@ -142,7 +142,7 @@ class Flagbit_MEP_Helper_Shipping extends Mage_Core_Helper_Abstract
         $request->setPackageQty(1);
         $request->setPackagePhysicalValue($productPrice);
 
-        $request->setFreeMethodWeight(0);
+        $request->setFreeMethodWeight($productWeight);
 
         $request->setStoreId($store_id);
         $request->setWebsiteId($store->getWebsiteId());
