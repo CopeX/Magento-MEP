@@ -20,7 +20,7 @@ class Flagbit_MEP_Block_Adminhtml_Google_View_Edit_Form extends Mage_Adminhtml_B
                     'value' => Mage::helper('mep')->__('Start'),
                     'name' => 'launch',
                     'class' => 'form-button',
-                    'onclick' => 'startGoogleCategoriesImport(\'' . Mage::helper('adminhtml')->getUrl('/google/importcategories') . '\');',
+                    'onclick' => 'startGoogleCategoriesImport(\'' . Mage::helper('adminhtml')->getUrl('adminhtml/google/importcategories') . '\');',
                 ));
         }
         else
@@ -54,8 +54,8 @@ class Flagbit_MEP_Block_Adminhtml_Google_View_Edit_Form extends Mage_Adminhtml_B
                 <script type="text/javascript">
                     $(document).observe("dom:loaded", function() {
                         var googleMapping = new GoogleMapping();
-                        googleMapping.options.requestUrl.loadcategories = \'' . Mage::helper('adminhtml')->getUrl('/google/loadcategories') . '\';
-                        googleMapping.options.requestUrl.loadtaxonomies = \'' . Mage::helper('adminhtml')->getUrl('/google/loadtaxonomies') . '\';
+                        googleMapping.options.requestUrl.loadcategories = \'' . Mage::helper('adminhtml')->getUrl('adminhtml/google/loadcategories') . '\';
+                        googleMapping.options.requestUrl.loadtaxonomies = \'' . Mage::helper('adminhtml')->getUrl('adminhtml/google/loadtaxonomies') . '\';
                         googleMapping.load();
                     });
                 </script>
