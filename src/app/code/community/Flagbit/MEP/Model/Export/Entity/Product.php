@@ -1060,14 +1060,7 @@ class Flagbit_MEP_Model_Export_Entity_Product extends Mage_ImportExport_Model_Ex
 
     protected function  _getGoogleMapping($item, $mapItem) {
         $categoryIds = $item->getCategoryIds();
-        $categoryId = null;
-        $max = 0;
-        foreach ($categoryIds as $_categoryId) {
-            if(isset($this->_categoryIds[$_categoryId]) && count($this->_categoryIds[$_categoryId]) > $max){
-                $max = count($this->_categoryIds[$_categoryId]);
-                $categoryId = $_categoryId;
-            }
-        }
+        $categoryId = $this->_getMaxDepthCategory($categoryIds);
         $attrValue = '';
         if (isset($this->_categoryIds[$categoryId])) {
             $options = unserialize($mapItem->getOptions());
@@ -1095,6 +1088,18 @@ class Flagbit_MEP_Model_Export_Entity_Product extends Mage_ImportExport_Model_Ex
             $attrValue = implode($mappingSeparator, $mapped);
         }
         return $attrValue;
+    }
+
+    protected function _getMaxDepthCategory($categoryIds){
+        $categoryId = null;
+        $max = 0;
+        foreach ($categoryIds as $_categoryId) {
+            if(isset($this->_categoryIds[$_categoryId]) && count($this->_categoryIds[$_categoryId]) > $max){
+                $max = count($this->_categoryIds[$_categoryId]);
+                $categoryId = $_categoryId;
+            }
+        }
+        return $categoryId;
     }
 
     protected function  _getCustomOptions($item, $mapItem) {
