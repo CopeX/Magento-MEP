@@ -1073,17 +1073,14 @@ class Flagbit_MEP_Model_Export_Entity_Product extends Mage_ImportExport_Model_Ex
             $mapped = array();
             foreach ($categories as $category) {
                 if (!empty($this->_googleMapping[$category])) {
-                    if ($mappingType == 'last') {
-                        $element = array_slice($this->_googleMapping[$category], -1);
-                        $mapped[] = $element[0];
-                    }
-                    elseif ($mappingType == 'complete') {
-                        $mapped[] = implode($this->getProfile()->getCategoryDelimiter(), $this->_googleMapping[$category]);
-                    }
+                    $mapped[] = implode($this->getProfile()->getCategoryDelimiter(), $this->_googleMapping[$category]);
                 }
             }
             if (empty($mappingSeparator)) {
                 $mappingSeparator = ',';
+            }
+            if ($mappingType == 'last') {
+                $mapped = array_slice($mapped, -1);
             }
             $attrValue = implode($mappingSeparator, $mapped);
         }
