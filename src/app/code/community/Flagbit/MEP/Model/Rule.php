@@ -92,7 +92,7 @@ class Flagbit_MEP_Model_Rule extends Mage_CatalogRule_Model_Rule
     public function callbackValidateProduct($args)
     {
         $product = clone $args['product'];
-        $product->setData($args['row']);
+        $product->addData($args['row']);
         if ($this->getConditions() && $this->getConditions()->validate($product)) {
             $this->_productIds[] = $product->getId();
         }
@@ -172,7 +172,7 @@ class Flagbit_MEP_Model_Rule extends Mage_CatalogRule_Model_Rule
                     array(array($this, 'callbackValidateProduct')),
                     array(
                         'attributes' => $this->getCollectedAttributes(),
-                        'product'    => Mage::getModel('catalog/product'),
+                        'product'    => Mage::getModel('catalog/product')->setStoreId( $this->_profile->getStoreId()),
                     )
                 );
             }

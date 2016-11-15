@@ -489,9 +489,6 @@ class Flagbit_MEP_Model_Rule_Condition_Product
         if ('attribute_set_id' == $attrCode) {
             return $this->validateAttribute($object->getData($attrCode));
         }
-        if ('status' == $attrCode){
-            return $this->validateAttribute($object->getDataUsingMethod($attrCode));
-        }
 
         $oldAttrValue = $object->hasData($attrCode) ? $object->getData($attrCode) : null;
         $newValue = $oldAttrValue ? $oldAttrValue : $this->_getAttributeValue($object);
