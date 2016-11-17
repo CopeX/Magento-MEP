@@ -83,7 +83,9 @@ class Flagbit_MEP_Model_Data extends Mage_Catalog_Model_Convert_Parser_Product
             }
         }
 
-        return $attributes;
+        $eventObject = new Varien_Object(array('attributes' => $attributes, 'profileId' => $profileId));
+        Mage::dispatchEvent('mep_product_get_external_attributes', array('mep' => $eventObject));
+        return $eventObject->getAttributes();
     }
 
     /**
