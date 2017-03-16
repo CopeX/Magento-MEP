@@ -378,7 +378,7 @@ class Twig_ExpressionParser
                     throw new Twig_Error_Syntax(sprintf('Dynamic macro names are not supported (called on "%s")', $node->getAttribute('name')), $token->getLine(), $this->parser->getFilename());
                 }
 
-                $node = new Twig_Node_Expression_MethodCall($node, 'get'.$arg->getAttribute('value'), $arguments, $lineno);
+                $node = new Twig_Node_Expression_MethodCall($node, 'get' . $arg->getAttribute('value'), $arguments, $lineno);
                 $node->setAttribute('safe', true);
 
                 return $node;
@@ -459,7 +459,7 @@ class Twig_ExpressionParser
      * Parses arguments.
      *
      * @param Boolean $namedArguments Whether to allow named arguments or not
-     * @param Boolean $definition     Whether we are parsing arguments for a function definition
+     * @param Boolean $definition Whether we are parsing arguments for a function definition
      */
     public function parseArguments($namedArguments = false, $definition = false)
     {

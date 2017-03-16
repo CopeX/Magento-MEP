@@ -24,7 +24,11 @@ $installer = $this;
 $installer->startSetup();
 
 $installer->run("
-ALTER TABLE `{$this->getTable('mep/profile')}` ADD COLUMN `media_gallery_delimiter` varchar(15) DEFAULT ';' AFTER `category_delimiter`;
+CREATE TABLE `mep_google_store_language` (
+  `store_id` int(11) NOT NULL,
+  `language` char(8) NOT NULL,
+  PRIMARY KEY (`store_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 ");
 
 $installer->endSetup();

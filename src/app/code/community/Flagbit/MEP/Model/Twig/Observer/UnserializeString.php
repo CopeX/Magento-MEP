@@ -1,6 +1,7 @@
 <?php
 
-class Flagbit_MEP_Model_Twig_Observer_UnserializeString {
+class Flagbit_MEP_Model_Twig_Observer_UnserializeString
+{
 
     protected $_adapter;
 
@@ -9,7 +10,8 @@ class Flagbit_MEP_Model_Twig_Observer_UnserializeString {
      *
      * @param Varien_Event_Observer $observer
      */
-    public function addUnserializeString($observer) {
+    public function addUnserializeString($observer)
+    {
         $twig = $observer->getTwig();
         $policy = $observer->getPolicy();
         $this->_adapter = $observer->getAdapter();
@@ -23,12 +25,13 @@ class Flagbit_MEP_Model_Twig_Observer_UnserializeString {
      *
      * @param float $numbers
      */
-    public function unserializeString($string) {
+    public function unserializeString($string)
+    {
         $result = null;
         try {
             $result = unserialize($string);
 
-        } catch(Exception $e) {
+        } catch (Exception $e) {
             $result = false;
         }
         return $result;

@@ -24,7 +24,7 @@ class Flagbit_MEP_Block_Adminhtml_Shipping_Popup
         $this->setChild('save_button',
             $this->getLayout()->createBlock('adminhtml/widget_button')
                 ->setData(array(
-                    'type'  => 'submit',
+                    'type' => 'submit',
                     'value' => 'Submit',
                     'class' => 'save',
                     'title' => 'Submit',
@@ -50,7 +50,8 @@ class Flagbit_MEP_Block_Adminhtml_Shipping_Popup
      *
      * @return string
      */
-    public function getSaveButtonHtml() {
+    public function getSaveButtonHtml()
+    {
         return $this->getChildHtml('save_button');
     }
 }

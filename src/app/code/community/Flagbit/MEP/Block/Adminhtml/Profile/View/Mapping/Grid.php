@@ -31,7 +31,7 @@ class Flagbit_MEP_Block_Adminhtml_Profile_View_Mapping_Grid extends Mage_Adminht
             $this->getLayout()->createBlock('adminhtml/widget_button')
                 ->setData(array(
                     'label' => Mage::helper('adminhtml')->__('Add Attribute'),
-                    'onclick' => "mepAttributeSettingsDialog.openDialog('".$this->getUrl('*/profile/popup', array('profile_id' => $this->getProfileId()))."')",
+                    'onclick' => "mepAttributeSettingsDialog.openDialog('" . $this->getUrl('*/profile/popup', array('profile_id' => $this->getProfileId())) . "')",
                     'class' => 'add'
                 ))
         );
@@ -46,7 +46,8 @@ class Flagbit_MEP_Block_Adminhtml_Profile_View_Mapping_Grid extends Mage_Adminht
 
     public function getRowUrl($row)
     {
-        return "javascript:mepAttributeSettingsDialog.openDialog('".$this->getUrl('*/profile/popup', array('id' => $row->getId(), 'profile_id' => $this->getProfileId()))."')";
+        return "javascript:mepAttributeSettingsDialog.openDialog('" . $this->getUrl('*/profile/popup', array('id' => $row->getId(),
+                                                                                                             'profile_id' => $this->getProfileId())) . "')";
     }
 
     /**
@@ -57,8 +58,8 @@ class Flagbit_MEP_Block_Adminhtml_Profile_View_Mapping_Grid extends Mage_Adminht
     protected function _toHtml()
     {
         $html = '';
-        if($this->getRequest()->isAjax()){
-            $html  = '<div id="messages">'.$this->getMessagesBlock()->getGroupedHtml().'</div>';
+        if ($this->getRequest()->isAjax()) {
+            $html = '<div id="messages">' . $this->getMessagesBlock()->getGroupedHtml() . '</div>';
         }
         $html .= parent::_toHtml();
         return $html;
@@ -159,7 +160,8 @@ class Flagbit_MEP_Block_Adminhtml_Profile_View_Mapping_Grid extends Mage_Adminht
             'actions' => array(
                 array(
                     'caption' => Mage::helper('adminhtml')->__('Delete'),
-                    'url' => array('base' => '*/profile_attribute/delete', 'params' => array('id' => $this->getProfileId())),
+                    'url' => array('base' => '*/profile_attribute/delete',
+                                   'params' => array('id' => $this->getProfileId())),
                     'field' => 'mapping_id',
                     'confirm' => $this->__('Do you really want to delete this field mapping.'),
                 ),

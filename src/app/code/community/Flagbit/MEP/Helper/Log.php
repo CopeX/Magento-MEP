@@ -1,5 +1,7 @@
 <?php
-class Flagbit_MEP_Helper_Log extends Mage_Core_Helper_Abstract {
+
+class Flagbit_MEP_Helper_Log extends Mage_Core_Helper_Abstract
+{
 
     const FILE = 'mep.log';
     const START_TIME_KEY = 'MEP_START_TIME';
@@ -72,7 +74,7 @@ class Flagbit_MEP_Helper_Log extends Mage_Core_Helper_Abstract {
         $_logMessage = array();
 
         // add caller class name in log4php style
-        if(is_object($caller)){
+        if (is_object($caller)) {
             $_logMessage[] = strtolower(str_replace('_', '.', substr(get_class($caller), 12)));
         }
 
@@ -83,16 +85,16 @@ class Flagbit_MEP_Helper_Log extends Mage_Core_Helper_Abstract {
         $_logMessage[] = $this->_getRelativeTime();
 
         // add message
-        if($message instanceof Exception){
-            $_logMessage[] = (string) $message; //->getMessage();
-        }elseif (is_array($message) || is_object($message)) {
+        if ($message instanceof Exception) {
+            $_logMessage[] = (string)$message; //->getMessage();
+        } elseif (is_array($message) || is_object($message)) {
             $_logMessage[] = print_r($message, true);
-        }else{
+        } else {
             $_logMessage[] = $message;
         }
 
         Mage::log(implode(' ', $_logMessage), $level, self::FILE, true);
-        foreach($this->_additionalLogFiles as $logfile){
+        foreach ($this->_additionalLogFiles as $logfile) {
             Mage::log(implode(' ', $_logMessage), $level, $logfile, true);
         }
     }
@@ -105,7 +107,7 @@ class Flagbit_MEP_Helper_Log extends Mage_Core_Helper_Abstract {
      */
     protected function _getRelativeTime($decimals = 4)
     {
-        if(!Mage::registry(self::START_TIME_KEY)){
+        if (!Mage::registry(self::START_TIME_KEY)) {
             Mage::register(self::START_TIME_KEY, microtime(true));
         }
         return sprintf('%.' . $decimals . 'f ms', microtime(true) - Mage::registry(self::START_TIME_KEY));
@@ -129,7 +131,7 @@ class Flagbit_MEP_Helper_Log extends Mage_Core_Helper_Abstract {
      */
     public function addAdditionalLogfile($logFile)
     {
-        if(!in_array($logFile, $this->_additionalLogFiles)){
+        if (!in_array($logFile, $this->_additionalLogFiles)) {
             $this->_additionalLogFiles[] = $logFile;
         }
         return $this;
@@ -143,21 +145,22 @@ class Flagbit_MEP_Helper_Log extends Mage_Core_Helper_Abstract {
      * @param int $decimals
      * @return string
      */
-    private function _byteFormat($bytes, $unit = "", $decimals = 2) {
+    private function _byteFormat($bytes, $unit = "", $decimals = 2)
+    {
         $units = array('B' => 0, 'KB' => 1, 'MB' => 2, 'GB' => 3, 'TB' => 4,
-                'PB' => 5, 'EB' => 6, 'ZB' => 7, 'YB' => 8);
+                       'PB' => 5, 'EB' => 6, 'ZB' => 7, 'YB' => 8);
 
         $value = 0;
         if ($bytes > 0) {
             // Generate automatic prefix by bytes
             // If wrong prefix given
             if (!array_key_exists($unit, $units)) {
-                $pow = floor(log($bytes)/log(1024));
+                $pow = floor(log($bytes) / log(1024));
                 $unit = array_search($pow, $units);
             }
 
             // Calculate byte value by prefix
-            $value = ($bytes/pow(1024,floor($units[$unit])));
+            $value = ($bytes / pow(1024, floor($units[$unit])));
         }
 
         // If decimals is not numeric or decimals is less than 0
@@ -167,7 +170,7 @@ class Flagbit_MEP_Helper_Log extends Mage_Core_Helper_Abstract {
         }
 
         // Format output
-        return sprintf('%.' . $decimals . 'f '.$unit, $value);
+        return sprintf('%.' . $decimals . 'f ' . $unit, $value);
     }
 
 }

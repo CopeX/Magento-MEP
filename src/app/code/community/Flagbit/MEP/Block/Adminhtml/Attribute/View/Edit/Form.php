@@ -13,9 +13,9 @@ class Flagbit_MEP_Block_Adminhtml_Attribute_View_Edit_Form extends Mage_Adminhtm
     {
 
         $data = array();
-        if($this->getRequest()->getPost()){
+        if ($this->getRequest()->getPost()) {
             $data = $this->getRequest()->getPost();
-        }elseif(Mage::registry('mep_attribute_mapping') instanceof Flagbit_MEP_Model_Attribute_Mapping){
+        } elseif (Mage::registry('mep_attribute_mapping') instanceof Flagbit_MEP_Model_Attribute_Mapping) {
             $data = Mage::registry('mep_attribute_mapping')->getData();
         }
 
@@ -63,11 +63,11 @@ class Flagbit_MEP_Block_Adminhtml_Attribute_View_Edit_Form extends Mage_Adminhtm
                 'class' => 'required-entry',
                 'required' => true,
                 'name' => 'source_attribute_code',
-                'values'    => Mage::getSingleton('mep/attribute_mapping')->getValuesForForm(),
+                'values' => Mage::getSingleton('mep/attribute_mapping')->getValuesForForm(),
             )
         );
 
-        if(isset($data['source_attribute_code']) && $data['source_attribute_code'] == 'category') {
+        if (isset($data['source_attribute_code']) && $data['source_attribute_code'] == 'category') {
             $fieldset->addField(
                 'category_type',
                 'select',
@@ -75,8 +75,8 @@ class Flagbit_MEP_Block_Adminhtml_Attribute_View_Edit_Form extends Mage_Adminhtm
                     'label' => Mage::helper('mep')->__('Mapping Type'),
                     'name' => 'category_type',
                     'options' => array(
-                        'single'    => Mage::helper('mep')->__('The full path will be mapped'),
-                        'complete'  => Mage::helper('mep')->__('The last category of the path will be mapped'),
+                        'single' => Mage::helper('mep')->__('The full path will be mapped'),
+                        'complete' => Mage::helper('mep')->__('The last category of the path will be mapped'),
                     ),
                     'note' => $this->__('Only use the first category path of the product')
                 )
@@ -98,8 +98,8 @@ class Flagbit_MEP_Block_Adminhtml_Attribute_View_Edit_Form extends Mage_Adminhtm
      */
     protected function _toHtml()
     {
-        $html  = '<form '.$this->getForm()->serialize($this->getForm()->getHtmlAttributes()).'>';
-        $html .= '<input name="form_key" type="hidden" value="'.Mage::getSingleton('core/session')->getFormKey().'" />';
+        $html = '<form ' . $this->getForm()->serialize($this->getForm()->getHtmlAttributes()) . '>';
+        $html .= '<input name="form_key" type="hidden" value="' . Mage::getSingleton('core/session')->getFormKey() . '" />';
         $html .= parent::_toHtml();
         $html .= $this->getLayout()->createBlock('mep/adminhtml_attribute_view_edit_options')->toHtml();
         $html .= '</form>';

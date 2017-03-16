@@ -48,7 +48,8 @@ class Flagbit_MEP_Block_Adminhtml_Category_Mapping extends Mage_Adminhtml_Block_
      * Initialize tab
      *
      */
-    public function __construct() {
+    public function __construct()
+    {
         parent::__construct();
         $this->setShowGlobalIcon(true);
     }
@@ -56,11 +57,11 @@ class Flagbit_MEP_Block_Adminhtml_Category_Mapping extends Mage_Adminhtml_Block_
     protected function getHintByType($type)
     {
         $types = array(
-                        'single'    => Mage::helper('mep')->__('each single Category will be mapped'),
-                        'complete'  => Mage::helper('mep')->__('one Category contains the full Path'),
-                      );
-        if(isset($types[$type])){
-            return Mage::helper('mep')->__('Mapping Type').': '.$types[$type];
+            'single' => Mage::helper('mep')->__('each single Category will be mapped'),
+            'complete' => Mage::helper('mep')->__('one Category contains the full Path'),
+        );
+        if (isset($types[$type])) {
+            return Mage::helper('mep')->__('Mapping Type') . ': ' . $types[$type];
         }
         return '';
     }
@@ -70,25 +71,26 @@ class Flagbit_MEP_Block_Adminhtml_Category_Mapping extends Mage_Adminhtml_Block_
      *
      * @return Mage_Adminhtml_Block_Catalog_Category_Tab_Attributes
      */
-    protected function _prepareForm() {
+    protected function _prepareForm()
+    {
 
         $form = new Varien_Data_Form();
         $form->setHtmlIdPrefix('group_mep');
         $form->setDataObject($this->getCategory());
 
         $fieldset = $form->addFieldset('fieldset_group_mep', array(
-            'legend'    => Mage::helper('mep')->__('MEP Mappings'),
-            'class'     => 'fieldset-wide',
+            'legend' => Mage::helper('mep')->__('MEP Mappings'),
+            'class' => 'fieldset-wide',
         ));
 
         /* @var $collection Flagbit_MEP_Model_Mysql4_Attribute_Mapping_Collection */
         $collection = Mage::getModel('mep/attribute_mapping')->getCollection()->addFieldToFilter('source_attribute_code', 'category');
 
-        foreach($collection as $mapping){
-            $fieldset->addField('mapping_'.$mapping->getId(), 'text', array(
-                'label'   => $mapping->getName(),
-                'name'    => 'mapping_'.$mapping->getId(),
-                'note' => $this->getHintByType($mapping->getCategoryType()).', '.Mage::helper('mep')->__('Attribute Code: %s', $mapping->getAttributeCode())
+        foreach ($collection as $mapping) {
+            $fieldset->addField('mapping_' . $mapping->getId(), 'text', array(
+                'label' => $mapping->getName(),
+                'name' => 'mapping_' . $mapping->getId(),
+                'note' => $this->getHintByType($mapping->getCategoryType()) . ', ' . Mage::helper('mep')->__('Attribute Code: %s', $mapping->getAttributeCode())
             ));
         }
 
@@ -115,9 +117,9 @@ class Flagbit_MEP_Block_Adminhtml_Category_Mapping extends Mage_Adminhtml_Block_
             ->setStoreFilter($storeId, false)
             ->load();
 
-        foreach($valuesCollection as $value){
+        foreach ($valuesCollection as $value) {
             $mapping = $collection->getItemById($value->getParentId());
-            $values['mapping_'.$mapping->getId()] = $value->getValue();
+            $values['mapping_' . $mapping->getId()] = $value->getValue();
         }
         return $values;
     }

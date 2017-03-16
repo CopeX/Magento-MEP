@@ -1,6 +1,7 @@
 <?php
 
-class Flagbit_MEP_Helper_Table extends Mage_Core_Helper_Abstract {
+class Flagbit_MEP_Helper_Table extends Mage_Core_Helper_Abstract
+{
 
     protected $_profile;
 
@@ -8,7 +9,8 @@ class Flagbit_MEP_Helper_Table extends Mage_Core_Helper_Abstract {
 
     protected $_enclosure;
 
-    public function toHtmlTable($csv, $profileId) {
+    public function toHtmlTable($csv, $profileId)
+    {
         $this->_delimiter = $this->_getProfile($profileId)->getDelimiter();
         if ($this->_delimiter == '\t') {
             $this->_delimiter = chr(9);
@@ -26,7 +28,8 @@ class Flagbit_MEP_Helper_Table extends Mage_Core_Helper_Abstract {
         return $content;
     }
 
-    protected function  _createHeader($row) {
+    protected function _createHeader($row)
+    {
         $row = explode($this->_delimiter, $row);
         array_walk($row, array($this, '_cleanEnclosure'));
         $data = implode('</th><th>', $row);
@@ -39,7 +42,8 @@ class Flagbit_MEP_Helper_Table extends Mage_Core_Helper_Abstract {
         return '';
     }
 
-    protected function  _createRow($row) {
+    protected function _createRow($row)
+    {
         $row = explode($this->_delimiter, $row);
         array_walk($row, array($this, '_cleanEnclosure'));
         $data = implode('</td><td>', $row);
@@ -52,14 +56,16 @@ class Flagbit_MEP_Helper_Table extends Mage_Core_Helper_Abstract {
         return '';
     }
 
-    protected function  _getProfile($profileId) {
+    protected function _getProfile($profileId)
+    {
         if (!$this->_profile) {
             $this->_profile = Mage::getModel('mep/profile')->load($profileId);
         }
         return $this->_profile;
     }
 
-    protected function  _cleanEnclosure(&$data, $id) {
+    protected function _cleanEnclosure(&$data, $id)
+    {
         $data = trim(rtrim($data, $this->_enclosure), $this->_enclosure);
     }
 }

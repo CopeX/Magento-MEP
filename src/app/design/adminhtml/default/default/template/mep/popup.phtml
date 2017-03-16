@@ -1,39 +1,46 @@
 <div id="container">
     <div id="field_content" class="mapping-dialog">
-        <form action="<?php echo Mage::helper("adminhtml")->getUrl("adminhtml/profile_attribute/edit") ?>" id="mappingform">
+        <form action="<?php echo Mage::helper("adminhtml")->getUrl("adminhtml/profile_attribute/edit") ?>"
+              id="mappingform">
             <ul class="formfield_list">
                 <li>
-                    <label for="attribute_code"><?php echo $this->__('In Database');?></label>
+                    <label for="attribute_code"><?php echo $this->__('In Database'); ?></label>
                     <div class="input-box">
-                        <select name="attribute_code[]" id="attribute_code" class="chzn-select" multiple="multiple" data-placeholder="<?php echo $this->__('Select Some Attributes');?>">
+                        <select name="attribute_code[]" id="attribute_code" class="chzn-select" multiple="multiple"
+                                data-placeholder="<?php echo $this->__('Select Some Attributes'); ?>">
                             <?php $aha = Mage::getModel('mep/data')->getExternalAttributes($this->getProfileId()); ?>
                             <?php foreach ($aha as $_value => $_label): ?>
-                                <option value="<?php echo $_value ?>" <?php echo $this->getIsSelectedAttribute($_value) ? 'selected' : '';?> ><?php echo $_label ?></option>
+                                <option value="<?php echo $_value ?>" <?php echo $this->getIsSelectedAttribute($_value) ? 'selected' : ''; ?> ><?php echo $_label ?></option>
                             <?php endforeach; ?>
                         </select>
                     </div>
                 </li>
                 <li>
-                    <label for="to_field"><?php echo $this->__('To Field');?></label>
+                    <label for="to_field"><?php echo $this->__('To Field'); ?></label>
                     <div class="input-box">
-                        <input type="text" name="to_field" value="<?php echo $this->getMapping()->getToField();?>" id="to_field" class="input-text">
+                        <input type="text" name="to_field" value="<?php echo $this->getMapping()->getToField(); ?>"
+                               id="to_field" class="input-text">
                     </div>
                 </li>
                 <li>
-                    <label for="format"><?php echo $this->__('Format');?></label>
+                    <label for="format"><?php echo $this->__('Format'); ?></label>
                     <div class="input-box">
-                        <input type="text" name="format" value="<?php echo $this->getMapping()->getFormat();?>" id="format" class="input-text">
+                        <input type="text" name="format" value="<?php echo $this->getMapping()->getFormat(); ?>"
+                               id="format" class="input-text">
                     </div>
                 </li>
                 <li>
-                    <label for="position"><?php echo $this->__('Position');?></label>
+                    <label for="position"><?php echo $this->__('Position'); ?></label>
                     <div class="input-box">
-                        <input type="text" name="position" value="<?php echo $this->getMapping()->getPosition();?>" id="position" class="input-text">
+                        <input type="text" name="position" value="<?php echo $this->getMapping()->getPosition(); ?>"
+                               id="position" class="input-text">
                     </div>
                 </li>
                 <li class="block-checkbox">
-                    <label for="inheritance"><?php echo $this->__('Inheritance');?></label>
-                    <input type="checkbox" name="inheritance" value="1" <?php if ($this->getMapping()->getInheritance() == 1) echo 'checked="checked"'; ?> id="inheritance" class="input-checkbox">
+                    <label for="inheritance"><?php echo $this->__('Inheritance'); ?></label>
+                    <input type="checkbox" name="inheritance"
+                           value="1" <?php if ($this->getMapping()->getInheritance() == 1) echo 'checked="checked"'; ?>
+                           id="inheritance" class="input-checkbox">
                 </li>
                 <li id="inheritance_type_block" <?php if ($this->getMapping()->getInheritance() != 1) echo 'style="display: none;"'; ?>>
                     <div class="input-box">
@@ -45,7 +52,7 @@
                     </div>
                 </li>
                 <li id="image_url_type_block" <?php if ($this->getMapping()->getAttributeCode() != 'image_url') echo 'style="display: none;"'; ?>>
-                    <label for="image_url_type"><?php echo $this->__('Image type');?></label>
+                    <label for="image_url_type"><?php echo $this->__('Image type'); ?></label>
                     <div class="input-box">
                         <select name="options[image_url_type]" id="image_url_type" class="select">
                             <option value=""></option>
@@ -56,7 +63,7 @@
                     </div>
                 </li>
                 <li id="google_mapping_type_block" <?php if ($this->getMapping()->getAttributeCode() != 'google_mapping') echo 'style="display: none;"'; ?>>
-                    <label for="google_mapping_type"><?php echo $this->__('Mapping type');?></label>
+                    <label for="google_mapping_type"><?php echo $this->__('Mapping type'); ?></label>
                     <div class="input-box">
                         <select name="options[google_mapping_type]" id="google_mapping_type" class="select">
                             <option value=""></option>
@@ -65,9 +72,11 @@
                             <?php endforeach; ?>
                         </select>
                     </div>
-                    <label for="google_mapping_separator"><?php echo $this->__('Mapping separator');?></label>
+                    <label for="google_mapping_separator"><?php echo $this->__('Mapping separator'); ?></label>
                     <div class="input-box">
-                        <input value="<?php echo $this->getMapping()->getOption('google_mapping_separator'); ?>" type="text" name="options[google_mapping_separator]" id="google_mapping_separator" class="input-text"/>
+                        <input value="<?php echo $this->getMapping()->getOption('google_mapping_separator'); ?>"
+                               type="text" name="options[google_mapping_separator]" id="google_mapping_separator"
+                               class="input-text"/>
                     </div>
                 </li>
                 <li>
@@ -76,8 +85,8 @@
                     </div>
                 </li>
             </ul>
-            <input type="hidden" name="profile_id" value="<?php echo $this->getProfileId() ?>" />
-            <input type="hidden" name="id" id="id" value="<?php echo $this->getMapping()->getId();?>" />
+            <input type="hidden" name="profile_id" value="<?php echo $this->getProfileId() ?>"/>
+            <input type="hidden" name="id" id="id" value="<?php echo $this->getMapping()->getId(); ?>"/>
         </form>
     </div>
 </div>
@@ -92,12 +101,12 @@
 
     $('inheritance').observe('change', selectInheritance);
 
-    function    selectInheritance(event) {
+    function selectInheritance(event) {
         var element = event.element();
         if (element.checked == true) {
             $('inheritance_type_block').show();
         }
-        else{
+        else {
             $('inheritance_type_block').hide();
         }
     }
@@ -105,7 +114,7 @@
     /**
      * Override this from Chosen library to be able to show/hide our extra fields in form
      */
-    Chosen.prototype.choice_build = function(item) {
+    Chosen.prototype.choice_build = function (item) {
         var choice, close_link,
             _this = this,
             result = null;
@@ -120,7 +129,7 @@
                 "class": 'search-choice-close',
                 rel: item.array_index
             });
-            close_link.observe("click", function(evt) {
+            close_link.observe("click", function (evt) {
                 // removing out content
                 checkCallbackRemove(item);
                 return _this.choice_destroy_link_click(evt);
@@ -157,18 +166,18 @@
         }
     }
 
-    Event.observe("mappingform", "submit", function(event) {
+    Event.observe("mappingform", "submit", function (event) {
         $("mappingform").request({
-            onFailure : function() {
+            onFailure: function () {
             },
-            onSuccess : function(t) {
+            onSuccess: function (t) {
                 var parameters = {isAjax: true, profile_id:<?php echo $this->getProfileId() ?>};
                 // make another ajax call to reload the fields table
                 new Ajax.Request("<?php echo Mage::helper("adminhtml")->getUrl("adminhtml/profile_attribute/index") ?>", {
                     method: "post",
                     parameters: parameters,
-                    onSuccess: function(transport)  {
-                        if(transport.status == 200) {
+                    onSuccess: function (transport) {
+                        if (transport.status == 200) {
                             var response = transport.responseText;
                             $("mapping_grid").update(response);
                         }
@@ -186,19 +195,19 @@
      * Add extra field to the form for specific attribute
      */
 
-    function    imageUrlOptions() {
+    function imageUrlOptions() {
         $('image_url_type_block').show();
     }
 
-    function    imageUrlOptionsHide() {
+    function imageUrlOptionsHide() {
         $('image_url_type_block').hide();
     }
 
-    function    googleMappingOptions() {
+    function googleMappingOptions() {
         $('google_mapping_type_block').show();
     }
 
-    function    googleMappingOptionsHide() {
+    function googleMappingOptionsHide() {
         $('google_mapping_type_block').hide();
     }
     // ]]>

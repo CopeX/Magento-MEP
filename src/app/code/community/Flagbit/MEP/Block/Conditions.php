@@ -20,6 +20,7 @@
  * @version   1.0.0
  * @since     0.1.0
  */
+
 /**
  * Renders the conditions
  *
@@ -43,8 +44,7 @@ class Flagbit_MEP_Block_Conditions
     public function render(Varien_Data_Form_Element_Abstract $element)
     {
         if ($element->getRule() && $element->getRule()->getConditions()) {
-            return $element->getRule()->getConditions()->asHtmlRecursive();
-            ;
+            return $element->getRule()->getConditions()->asHtmlRecursive();;
         }
         return '';
     }

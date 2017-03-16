@@ -30,10 +30,10 @@ class Flagbit_MEP_Block_Adminhtml_Shipping_View_Mapping_Grid extends Mage_Adminh
         $this->setChild('addfilter_button',
             $this->getLayout()->createBlock('adminhtml/widget_button')
                 ->setData(array(
-                'label' => Mage::helper('adminhtml')->__('Add Attribute'),
-                'onclick' => "mepAttributeSettingsDialog.openDialog('".$this->getUrl('*/shipping/popup', array('profile_id' => $this->getProfileId()))."')",
-                'class' => 'task'
-            ))
+                    'label' => Mage::helper('adminhtml')->__('Add Attribute'),
+                    'onclick' => "mepAttributeSettingsDialog.openDialog('" . $this->getUrl('*/shipping/popup', array('profile_id' => $this->getProfileId())) . "')",
+                    'class' => 'task'
+                ))
         );
         return $this;
     }
@@ -46,7 +46,8 @@ class Flagbit_MEP_Block_Adminhtml_Shipping_View_Mapping_Grid extends Mage_Adminh
 
     public function getRowUrl($row)
     {
-        return "javascript:mepAttributeSettingsDialog.openDialog('".$this->getUrl('*/shipping/popup', array('id' => $row->getId(), 'profile_id' => $this->getProfileId()))."')";
+        return "javascript:mepAttributeSettingsDialog.openDialog('" . $this->getUrl('*/shipping/popup', array('id' => $row->getId(),
+                                                                                                              'profile_id' => $this->getProfileId())) . "')";
     }
 
     /**
@@ -57,8 +58,8 @@ class Flagbit_MEP_Block_Adminhtml_Shipping_View_Mapping_Grid extends Mage_Adminh
     protected function _toHtml()
     {
         $html = '';
-        if($this->getRequest()->isAjax()){
-            $html  = '<div id="messages">'.$this->getMessagesBlock()->getGroupedHtml().'</div>';
+        if ($this->getRequest()->isAjax()) {
+            $html = '<div id="messages">' . $this->getMessagesBlock()->getGroupedHtml() . '</div>';
         }
         $html .= parent::_toHtml();
         return $html;

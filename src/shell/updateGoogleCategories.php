@@ -9,16 +9,13 @@ class   Flagbit_MEP_UpdateGoogleCategories extends Mage_Shell_Abstract
         $file = explode("\n", file_get_contents('taxonomy.de-DE.txt'));
         $taxonomies = array();
         $i = 0;
-        foreach ($file as $line)
-        {
+        foreach ($file as $line) {
             $reset = true;
-            if ($line[0] == '#' || strlen($line) == 0)
-            {
+            if ($line[0] == '#' || strlen($line) == 0) {
                 continue;
             }
             $lineToArray = explode('>', $line);
-            foreach ($lineToArray as $taxonomy)
-            {
+            foreach ($lineToArray as $taxonomy) {
                 $key = $this->_getSlug($taxonomy);
                 $node = array(
                     'name' => trim($taxonomy),
@@ -27,8 +24,7 @@ class   Flagbit_MEP_UpdateGoogleCategories extends Mage_Shell_Abstract
                     'slug' => $key,
                     'parent_id' => 0
                 );
-                if ($reset)
-                {
+                if ($reset) {
                     if (!array_key_exists($key, $taxonomies)) {
                         $taxonomyModel = Mage::getModel('mep/googleTaxonomies');
                         $taxonomyModel->setData('parent_id', $node['parent_id']);
@@ -40,9 +36,7 @@ class   Flagbit_MEP_UpdateGoogleCategories extends Mage_Shell_Abstract
                     }
                     $previous = &$taxonomies[$key];
                     $reset = false;
-                }
-                else
-                {
+                } else {
                     $node['parent_id'] = $previous['mysql_id'];
                     if (!array_key_exists($key, $previous['children'])) {
                         $taxonomyModel = Mage::getModel('mep/googleTaxonomies');
@@ -59,9 +53,9 @@ class   Flagbit_MEP_UpdateGoogleCategories extends Mage_Shell_Abstract
         }
     }
 
-    protected function  _getSlug($taxonomy)
+    protected function _getSlug($taxonomy)
     {
-        $taxonomy = iconv('UTF-8','ASCII//TRANSLIT',$taxonomy);
+        $taxonomy = iconv('UTF-8', 'ASCII//TRANSLIT', $taxonomy);
         $taxonomy = preg_replace('`[^A-Za-z0-9 ]`', '', $taxonomy);
         $taxonomy = str_replace(' ', '_', trim($taxonomy));
         return strtolower($taxonomy);

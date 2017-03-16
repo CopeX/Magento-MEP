@@ -8,7 +8,7 @@ class Flagbit_MEP_Block_Adminhtml_Attribute_View_Edit_Options extends Mage_Eav_B
     public function __construct()
     {
         #parent::__construct();
-        switch($this->getAttributeMappingObject()->getSourceAttributeCode()){
+        switch ($this->getAttributeMappingObject()->getSourceAttributeCode()) {
             case 'category':
                 $this->setTemplate('mep/attribute/mapping/categories.phtml');
                 break;
@@ -42,10 +42,9 @@ class Flagbit_MEP_Block_Adminhtml_Attribute_View_Edit_Options extends Mage_Eav_B
                 foreach ($this->getStores() as $store) {
                     $storeValues = $this->getStoreOptionValues($store->getId());
                     if (isset($storeValues[$option->getId()])) {
-                        $value['store'.$store->getId()] = htmlspecialchars($storeValues[$option->getId()]);
-                    }
-                    else {
-                        $value['store'.$store->getId()] = '';
+                        $value['store' . $store->getId()] = htmlspecialchars($storeValues[$option->getId()]);
+                    } else {
+                        $value['store' . $store->getId()] = '';
                     }
                 }
                 $values[] = new Varien_Object($value);
@@ -70,11 +69,11 @@ class Flagbit_MEP_Block_Adminhtml_Attribute_View_Edit_Options extends Mage_Eav_B
             $values = array();
             /* @var $categoryCollection Mage_Catalog_Model_Resource_Category_Collection */
             $categoryCollection = Mage::getResourceModel('catalog/category_collection')
-                                    ->addAttributeToSelect('name')
-                                    ->addAttributeToSelect('is_active')
-                                    ->addFieldToFilter('is_active', '1')
-                                    ->setOrder('position', 'asc')
-                                    ->load();
+                ->addAttributeToSelect('name')
+                ->addAttributeToSelect('is_active')
+                ->addFieldToFilter('is_active', '1')
+                ->setOrder('position', 'asc')
+                ->load();
 
 
             /* @var $category Mage_Catalog_Model_Category */
@@ -82,19 +81,18 @@ class Flagbit_MEP_Block_Adminhtml_Attribute_View_Edit_Options extends Mage_Eav_B
                 $value = array();
                 $value['id'] = $category->getId();
                 $value['parent_id'] = $category->getParentId();
-                if(!$category->getName()){
+                if (!$category->getName()) {
                     continue;
                 }
                 foreach ($this->getStores() as $store) {
-                    if($store->getId()){
+                    if ($store->getId()) {
                         $storeValues = $this->getStoreOptionValues($store->getId());
-                    }else{
+                    } else {
                         $storeValues[$category->getId()] = $category->getName();
                     }
                     if (isset($storeValues[$category->getId()])) {
                         $value[$store->getId()] = htmlspecialchars($storeValues[$category->getId()]);
-                    }
-                    else {
+                    } else {
                         $value[$store->getId()] = '';
                     }
                 }
@@ -107,7 +105,6 @@ class Flagbit_MEP_Block_Adminhtml_Attribute_View_Edit_Options extends Mage_Eav_B
     }
 
 
-
     /**
      * Retrieve attribute option values for given store id
      *
@@ -116,8 +113,8 @@ class Flagbit_MEP_Block_Adminhtml_Attribute_View_Edit_Options extends Mage_Eav_B
      */
     public function getStoreOptionValues($storeId)
     {
-        if($storeId){
-            $values = $this->getData('store_option_values_'.$storeId);
+        if ($storeId) {
+            $values = $this->getData('store_option_values_' . $storeId);
             if (is_null($values)) {
                 $values = array();
                 /* @var $valuesCollection Flagbit_MEP_Model_Mysql4_Attribute_Mapping_Option_Collection */
@@ -129,9 +126,9 @@ class Flagbit_MEP_Block_Adminhtml_Attribute_View_Edit_Options extends Mage_Eav_B
                 foreach ($valuesCollection as $item) {
                     $values[$item->getOptionId()] = $item->getValue();
                 }
-                $this->setData('store_option_values_'.$storeId, $values);
+                $this->setData('store_option_values_' . $storeId, $values);
             }
-        }else{
+        } else {
             $values = parent::getStoreOptionValues($storeId);
         }
         return $values;
@@ -143,7 +140,7 @@ class Flagbit_MEP_Block_Adminhtml_Attribute_View_Edit_Options extends Mage_Eav_B
     public function getAttributeMappingObject()
     {
         $object = null;
-        if(Mage::registry('mep_attribute_mapping') instanceof Flagbit_MEP_Model_Attribute_Mapping){
+        if (Mage::registry('mep_attribute_mapping') instanceof Flagbit_MEP_Model_Attribute_Mapping) {
             $object = Mage::registry('mep_attribute_mapping');
         }
         return $object;
@@ -156,11 +153,11 @@ class Flagbit_MEP_Block_Adminhtml_Attribute_View_Edit_Options extends Mage_Eav_B
      */
     public function getAttributeObject()
     {
-        if($this->_attribute === false){
+        if ($this->_attribute === false) {
             $this->_attribute = null;
-            if($this->getAttributeMappingObject() !== null){
+            if ($this->getAttributeMappingObject() !== null) {
 
-                switch($this->getAttributeMappingObject()->getSourceAttributeCode()){
+                switch ($this->getAttributeMappingObject()->getSourceAttributeCode()) {
 
                     case 'category':
                         /* @var $attribute Mage_Eav_Model_Entity_Attribute */

@@ -51,7 +51,7 @@ class Flagbit_MEP_Block_Adminhtml_Profile_View_Edit_Tabs extends Mage_Adminhtml_
             'content' => $this->getLayout()->createBlock('mep/adminhtml_profile_view_mapping')->toHtml(),
         ));
 
-        if(!empty($data['use_twig_templates'])){
+        if (!empty($data['use_twig_templates'])) {
             $this->addTab('form_data_xslt', array(
                 'label' => Mage::helper('mep')->__('Template'),
                 'title' => Mage::helper('mep')->__('Template'),

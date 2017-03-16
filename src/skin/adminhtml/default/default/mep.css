@@ -33,6 +33,7 @@
 .adminhtml-profile-edit div.mapping-dialog .input-checkbox {
     width: 15px;
 }
+
 .adminhtml-profile-edit div.mapping-dialog button {
     margin-top: 10px;
 }
@@ -63,6 +64,7 @@
     cursor: pointer;
     color: #D85909;
 }
+
 .adminhtml-profile-edit .dialog .attribute-mapping-window_close:after {
     content: "x";
     font-size: 20px;
@@ -74,6 +76,7 @@
     border: 2px solid #F3BE8E;
     color: #D85909;
 }
+
 .adminhtml-profile-edit .dialog div.attribute-mapping-window_content li {
     overflow: hidden;
     display: block;
@@ -88,9 +91,11 @@
 .adminhtml-profile-edit .dialog div.attribute-mapping-window_content select {
     margin-bottom: 5px;
 }
+
 .adminhtml-profil-edit .dialog div.attribute-mapping-window_content input {
     width: 167px;
 }
+
 .adminhtml-profile-edit .dialog div.attribute-mapping-window_content input.form-button {
     width: 100px;
     margin-top: 10px;
@@ -140,7 +145,7 @@
 }
 
 .adminhtml-profile-edit .dialog table.table_window {
-    table-layout:fixed !important;
+    table-layout: fixed !important;
 }
 
 .adminhtml-profile-edit #widget_window.attr-popup-window {
@@ -158,8 +163,7 @@
     margin: 2px 0px;
 }
 
-.mep_category_list_item select
-{
+.mep_category_list_item select {
     margin-left: 5px;
 }
 
@@ -181,9 +185,10 @@
 }
 
 .chosen-container .chosen-drop,
-.chosen-container .chosen-choices{
+.chosen-container .chosen-choices {
     width: 470px;
 }
+
 /* MEP Add attribute dialog box styles  END */
 
 .mep-version {

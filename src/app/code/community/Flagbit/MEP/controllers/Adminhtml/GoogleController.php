@@ -15,7 +15,7 @@ class   Flagbit_MEP_Adminhtml_GoogleController extends Mage_Adminhtml_Controller
     public function loadcategoriesAction()
     {
         $storeId = $this->getRequest()->getParam('store_id');
-        if ($storeId)  {
+        if ($storeId) {
             Mage::register('category_store_id', $storeId);
         }
 
@@ -31,7 +31,7 @@ class   Flagbit_MEP_Adminhtml_GoogleController extends Mage_Adminhtml_Controller
         $storeId = $this->getRequest()->getParam('store_id');
         $strLang = null;
 
-        if ($storeId)  {
+        if ($storeId) {
             Mage::register('category_store_id', $storeId);
             $strLang = Mage::helper('mep/storelang')->getLanguageForStoreId($storeId);
         }
@@ -43,8 +43,7 @@ class   Flagbit_MEP_Adminhtml_GoogleController extends Mage_Adminhtml_Controller
     public function loadtaxonomiesAction()
     {
         $taxonomyId = $this->getRequest()->getParam('taxonomy_id');
-        if ($taxonomyId)
-        {
+        if ($taxonomyId) {
             $taxonomies = Mage::helper('mep/categories')->getArrayForTaxonomy($taxonomyId);
             $this->getResponse()->clearHeaders()->setHeader('Content-Type', 'application/json');
             $this->getResponse()->setBody(json_encode($taxonomies));
@@ -54,13 +53,12 @@ class   Flagbit_MEP_Adminhtml_GoogleController extends Mage_Adminhtml_Controller
     public function saveAction()
     {
         $storeId = $this->getRequest()->getParam('store_id');
-        if (is_null($storeId))  {
+        if (is_null($storeId)) {
             $storeId = Mage::app()->getStore()->getStoreId();
         }
-        if ($data = $this->getRequest()->getPost())
-        {
+        if ($data = $this->getRequest()->getPost()) {
 
-            if(isset($data['mep_store_language'])) {
+            if (isset($data['mep_store_language'])) {
                 Mage::getModel('mep/googleStorelang')
                     ->load($storeId)
                     ->setData('store_id', $storeId)
@@ -69,10 +67,8 @@ class   Flagbit_MEP_Adminhtml_GoogleController extends Mage_Adminhtml_Controller
             }
 
             $mappings = Mage::helper('mep/categories')->prepareMappingForSave($data['google-mapping']);
-            try
-            {
-                foreach ($mappings as $mapping)
-                {
+            try {
+                foreach ($mappings as $mapping) {
                     $newMapping = Mage::getModel('mep/googleMapping')->loadByCategoryAndStore($mapping['category_id'], $storeId);
                     $newMapping->setData('category_id', $mapping['category_id']);
                     $newMapping->setData('google_mapping_ids', $mapping['google_mapping_ids']);
@@ -80,8 +76,7 @@ class   Flagbit_MEP_Adminhtml_GoogleController extends Mage_Adminhtml_Controller
                     $result = $newMapping->save();
                 }
                 Mage::getSingleton('adminhtml/session')->addSuccess(Mage::helper('mep')->__('Mapping was successfully saved'));
-            }
-            catch (Exception $e) {
+            } catch (Exception $e) {
                 Mage::getSingleton('adminhtml/session')->addError($e->getMessage());
             }
             $this->_redirect('*/*/', array('store_id' => $storeId));
@@ -93,12 +88,9 @@ class   Flagbit_MEP_Adminhtml_GoogleController extends Mage_Adminhtml_Controller
         $url = Mage::helper('mep/categories')->getGoogleCategoriesFileUrl();
         /** @var Flagbit_MEP_Model_GoogleMapping_Import $importModel */
         $importModel = Mage::getSingleton('mep/googleMapping_import');
-        try
-        {
+        try {
             $importModel->runImportWithUrl($url);
-        }
-        catch (Exception $e)
-        {
+        } catch (Exception $e) {
             Mage::getSingleton('adminhtml/session')->addError($e->getMessage());
             $this->getResponse()->setHeader('Content-Type', 'application/json');
             $this->getResponse()->setBody(json_encode(array('error' => $e->getMessage())));
@@ -110,12 +102,9 @@ class   Flagbit_MEP_Adminhtml_GoogleController extends Mage_Adminhtml_Controller
         $urls = Mage::helper('mep/categories')->getGoogleCategoriesFileUrls();
         /** @var Flagbit_MEP_Model_GoogleMapping_Import $importModel */
         $importModel = Mage::getSingleton('mep/googleMapping_import');
-        try
-        {
+        try {
             $importModel->runImportWithUrls($urls);
-        }
-        catch (Exception $e)
-        {
+        } catch (Exception $e) {
             Mage::getSingleton('adminhtml/session')->addError($e->getMessage());
             $this->getResponse()->setHeader('Content-Type', 'application/json');
             $this->getResponse()->setBody(json_encode(array('error' => $e->getMessage())));

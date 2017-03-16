@@ -1,4 +1,5 @@
 <?php
+
 class Flagbit_MEP_Block_Adminhtml_Profile_View_Edit_Tab_General extends Mage_Adminhtml_Block_Widget_Form
 {
     /**
@@ -58,11 +59,11 @@ class Flagbit_MEP_Block_Adminhtml_Profile_View_Edit_Tab_General extends Mage_Adm
             'store_id',
             'select',
             array(
-                'label'     => Mage::helper('mep')->__('Store View'),
-                'class'     => 'required-entry',
-                'required'  => true,
-                'name'      => 'store_id',
-                'values'    => Mage::getSingleton('adminhtml/system_store')->getStoreValuesForForm(false, true),
+                'label' => Mage::helper('mep')->__('Store View'),
+                'class' => 'required-entry',
+                'required' => true,
+                'name' => 'store_id',
+                'values' => Mage::getSingleton('adminhtml/system_store')->getStoreValuesForForm(false, true),
             )
         );
 
@@ -79,9 +80,9 @@ class Flagbit_MEP_Block_Adminhtml_Profile_View_Edit_Tab_General extends Mage_Adm
             array(
                 'label' => Mage::helper('core')->__('Activate'),
                 'class' => 'required-entry',
-                'required'  => true,
-                'name'  => 'activate_ftp',
-                'values'    => Mage::getModel('adminhtml/system_config_source_yesno')->toOptionArray()
+                'required' => true,
+                'name' => 'activate_ftp',
+                'values' => Mage::getModel('adminhtml/system_config_source_yesno')->toOptionArray()
             )
         );
 
@@ -90,9 +91,9 @@ class Flagbit_MEP_Block_Adminhtml_Profile_View_Edit_Tab_General extends Mage_Adm
             'text',
             array(
                 'label' => Mage::helper('mep')->__('FTP Host:Port'),
-                'name'  => 'ftp_host_port',
+                'name' => 'ftp_host_port',
                 'value' => ':21',
-                'note'  => Mage::helper('mep')->__('If no port given, port 21 will be used')
+                'note' => Mage::helper('mep')->__('If no port given, port 21 will be used')
             )
         );
 
@@ -101,7 +102,7 @@ class Flagbit_MEP_Block_Adminhtml_Profile_View_Edit_Tab_General extends Mage_Adm
             'text',
             array(
                 'label' => Mage::helper('mep')->__('FTP Username'),
-                'name'  => 'ftp_user'
+                'name' => 'ftp_user'
             )
         );
 
@@ -110,7 +111,7 @@ class Flagbit_MEP_Block_Adminhtml_Profile_View_Edit_Tab_General extends Mage_Adm
             'password',
             array(
                 'label' => Mage::helper('mep')->__('FTP Password'),
-                'name'  => 'ftp_password'
+                'name' => 'ftp_password'
             )
         );
 
@@ -119,8 +120,8 @@ class Flagbit_MEP_Block_Adminhtml_Profile_View_Edit_Tab_General extends Mage_Adm
             'text',
             array(
                 'label' => Mage::helper('mep')->__('Path on FTP server'),
-                'name'  => 'ftp_path',
-                'note'  => Mage::helper('mep')->__('If empty the root directory will be used')
+                'name' => 'ftp_path',
+                'note' => Mage::helper('mep')->__('If empty the root directory will be used')
             )
         );
 

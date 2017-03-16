@@ -4,6 +4,7 @@ class Flagbit_MEP_Model_Mysql4_Profile extends Mage_Core_Model_Mysql4_Abstract
 {
 
     protected $_serializedAttr = array('conditions_serialized', 'settings');
+
     /**
      * Constructor
      *
@@ -47,7 +48,7 @@ class Flagbit_MEP_Model_Mysql4_Profile extends Mage_Core_Model_Mysql4_Abstract
     protected function _checkUnique(Mage_Core_Model_Abstract $object)
     {
         $data = new Varien_Object($this->_prepareDataForSave($object));
-        
+
         $select = $this->_getWriteAdapter()->select()
             ->from($this->getTable('mep/profile'))
             ->where('filename' . '=?', trim($data->getData('filename')))
@@ -62,7 +63,8 @@ class Flagbit_MEP_Model_Mysql4_Profile extends Mage_Core_Model_Mysql4_Abstract
         return parent::_checkUnique($object);
     }
 
-    public function  saveField($field, $value, $profileId) {
+    public function saveField($field, $value, $profileId)
+    {
         $this->_getWriteAdapter()->update($this->getMainTable(), array($field => $value), 'id = ' . $profileId);
     }
 }

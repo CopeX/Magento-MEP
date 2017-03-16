@@ -26,18 +26,18 @@ class Flagbit_MEP_Model_Attribute_Mapping extends Mage_Core_Model_Abstract
         $attributes = Mage::getResourceModel('eav/entity_attribute_collection');
 
         $attributes->setEntityTypeFilter(Mage::getModel('catalog/product')->getResource()->getTypeId())
-                    ->addFieldToFilter('frontend_input', array('in' => array('select', 'multiselect')));
+            ->addFieldToFilter('frontend_input', array('in' => array('select', 'multiselect')));
 
         $options = array();
 
-        foreach($attributes as $attribute){
+        foreach ($attributes as $attribute) {
             $options[] = array(
                 'label' => sprintf('%s (%s)', $attribute->getFrontendLabel(), $attribute->getAttributeCode()),
                 'value' => $attribute->getAttributeCode()
             );
         }
 
-        usort ($options, array($this, '_sortValuesForForm'));
+        usort($options, array($this, '_sortValuesForForm'));
 
         return $options;
     }

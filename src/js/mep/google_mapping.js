@@ -1,7 +1,7 @@
 var GoogleMapping = Class.create();
 
 GoogleMapping.prototype = {
-    initialize : function() {
+    initialize: function () {
         var instance = this;
         this.options = {};
         this.options.requestUrl = {};
@@ -14,19 +14,19 @@ GoogleMapping.prototype = {
         this.options.languageSelector = $('mep_store_language');
         this.options.storeId = this.options.storeSelector.value;
         this.options.selectClass = '.taxonomy-select';
-        this.options.storeSelector.observe('change', function() {
+        this.options.storeSelector.observe('change', function () {
             instance.options.storeId = instance.options.storeSelector.value;
             instance.load();
         });
     },
-    load : function() {
+    load: function () {
         var instance = this;
         new Ajax.Request(this.options.requestUrl.loadcategories + '?store_id=' + this.options.storeId, {
             method: 'get',
             parameters: {
                 evalJS: true
             },
-            onSuccess: function(transport) {
+            onSuccess: function (transport) {
                 instance.parseJson(transport.responseText);
                 instance.bindSelect();
             }
@@ -37,17 +37,17 @@ GoogleMapping.prototype = {
             parameters: {
                 evalJS: true
             },
-            onSuccess: function(transport) {
+            onSuccess: function (transport) {
                 instance.parseJsonLanguage(transport.responseText);
                 instance.bindSelect();
             }
         });
 
     },
-    parseJsonLanguage : function (text) {
+    parseJsonLanguage: function (text) {
         var data = JSON.parse(text);
         var language = data.language;
-        if(null == language) {
+        if (null == language) {
             console.info('null');
             this.options.languageSelector.setValue('')
         } else {
@@ -55,18 +55,21 @@ GoogleMapping.prototype = {
         }
         window.nm = this.options.languageSelector;
     },
-    parseJson : function(text) {
+    parseJson: function (text) {
         this.options.categoriesBlock.update();
         var json = eval(text);
         for (var i = 0; i < json.length; i++) {
             var current = json[i];
-            var div = new Element('div', {id: 'category-' + current.id, class: 'mep_category_list_item', style: 'margin-left:' + current.margin + 'px'}).update(current.name);
+            var div = new Element('div', {
+                id: 'category-' + current.id,
+                class: 'mep_category_list_item',
+                style: 'margin-left:' + current.margin + 'px'
+            }).update(current.name);
             this.options.categoriesBlock.insert({
                 bottom: div
             });
             this.currentCategory = 'category-' + current.id;
-            for (var y = 0; y < current.mapping.length; y++)
-            {
+            for (var y = 0; y < current.mapping.length; y++) {
                 this.currentTaxonomy = current.mapping[y].taxonomyId;
                 this.currentLevel = parseInt(current.mapping[y].level) - 1;
                 this.loadedSelect[current.mapping[y].taxonomyId] = current.mapping[y].options;
@@ -77,29 +80,28 @@ GoogleMapping.prototype = {
             }
         }
     },
-    loadTaxonomy : function() {
+    loadTaxonomy: function () {
         var instance = this;
         var taxonomyId = this.currentTaxonomy;
         if (this.loadedSelect[taxonomyId] != undefined) {
             this.generateSelect();
             this.bindSelect();
-            return ;
+            return;
         }
 
         new Ajax.Request(this.options.requestUrl.loadtaxonomies + '?taxonomy_id=' + taxonomyId, {
             method: 'get',
-            onSuccess: function(transport) {
+            onSuccess: function (transport) {
                 instance.loadedSelect[taxonomyId] = eval(transport.responseText);
                 instance.generateSelect();
                 instance.bindSelect();
             }
         });
     },
-    bindSelect: function() {
+    bindSelect: function () {
         var instance = this;
         $$(this.options.selectClass).invoke('stopObserving', 'change');
-        $$(this.options.selectClass).invoke('observe', 'change', function()
-        {
+        $$(this.options.selectClass).invoke('observe', 'change', function () {
             instance.currentTaxonomy = this.value;
             instance.currentCategory = this.classNames().element.className.match(/category-[0-9]+/)[0];
             instance.currentLevel = parseInt(this.classNames().element.className.match(/level-([0-9])+/)[1]);
@@ -111,16 +113,19 @@ GoogleMapping.prototype = {
             }
         })
     },
-    getSelectForTaxonomy : function() {
+    getSelectForTaxonomy: function () {
         this.loadTaxonomy();
     },
-    generateSelect : function() {
+    generateSelect: function () {
         this.removeExistingLevels();
         if (this.loadedSelect[this.currentTaxonomy].length) {
             var categoryId = this.currentCategory.match(/[0-9]+/);
             var currentLevel = this.currentLevel + 1;
             var selectName = 'google-mapping[' + categoryId + '][' + currentLevel + ']';
-            var select = new Element('select', {name: selectName, class: 'taxonomy-select level-' + currentLevel + ' ' + this.currentCategory});
+            var select = new Element('select', {
+                name: selectName,
+                class: 'taxonomy-select level-' + currentLevel + ' ' + this.currentCategory
+            });
             select.insert(new Element('option'));
             for (var i = 0; i < this.loadedSelect[this.currentTaxonomy].length; i++) {
                 select.insert(new Element('option', {value: this.loadedSelect[this.currentTaxonomy][i].value}).update(this.loadedSelect[this.currentTaxonomy][i].label));
@@ -130,7 +135,7 @@ GoogleMapping.prototype = {
             });
         }
     },
-    removeExistingLevels : function() {
+    removeExistingLevels: function () {
         var level = this.currentLevel + 1;
         var existing = $$('.' + this.currentCategory + '.level-' + level).first();
         while (existing != undefined) {

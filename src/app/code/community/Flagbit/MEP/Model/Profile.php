@@ -20,7 +20,8 @@ class Flagbit_MEP_Model_Profile extends Mage_Core_Model_Abstract
      *
      * @return Mage_Core_Model_Abstract
      */
-    protected function  _afterLoad() {
+    protected function _afterLoad()
+    {
         if (!is_array($this->getSettings())) {
             $this->setSettings(unserialize($this->getSettings()));
         }
@@ -30,8 +31,8 @@ class Flagbit_MEP_Model_Profile extends Mage_Core_Model_Abstract
             $cronExpression = explode(' ', $cronExpression);
             $startTime = array($cronExpression[1], $cronExpression[0], 0);
             $this->setMepCronStartTime(implode(',', $startTime));
-            $frequencyDaily   = Mage_Adminhtml_Model_System_Config_Source_Cron_Frequency::CRON_DAILY;
-            $frequencyWeekly  = Mage_Adminhtml_Model_System_Config_Source_Cron_Frequency::CRON_WEEKLY;
+            $frequencyDaily = Mage_Adminhtml_Model_System_Config_Source_Cron_Frequency::CRON_DAILY;
+            $frequencyWeekly = Mage_Adminhtml_Model_System_Config_Source_Cron_Frequency::CRON_WEEKLY;
             $frequencyMonthly = Mage_Adminhtml_Model_System_Config_Source_Cron_Frequency::CRON_MONTHLY;
             if ($cronExpression[2] == '1') {
                 $this->setMepCronFrequency($frequencyMonthly);
@@ -48,7 +49,8 @@ class Flagbit_MEP_Model_Profile extends Mage_Core_Model_Abstract
      *
      * @return integer
      */
-    function getProductCount() {
+    function getProductCount()
+    {
         return $this->getData('product_count');
     }
 
@@ -56,7 +58,8 @@ class Flagbit_MEP_Model_Profile extends Mage_Core_Model_Abstract
      * Set number of products matching the profile
      * @param int $product_count
      */
-    function setProductCount($product_count) {
+    function setProductCount($product_count)
+    {
         $this->setData('product_count', $product_count);
     }
 
@@ -67,8 +70,7 @@ class Flagbit_MEP_Model_Profile extends Mage_Core_Model_Abstract
      */
     protected function _beforeSave()
     {
-        if ($this->getId() || $this->getIsDuplicate() && $this->getOriginalId())
-        {
+        if ($this->getId() || $this->getIsDuplicate() && $this->getOriginalId()) {
             $this->setTwigHeaderTemplate(
                 $this->_generateTemplate($this->getTwigHeaderTemplate(), self::TWIG_TEMPLATE_TYPE_HEADER)
             );
@@ -78,13 +80,13 @@ class Flagbit_MEP_Model_Profile extends Mage_Core_Model_Abstract
             if (is_array($this->getSettings())) {
                 $this->setSettings(serialize($this->getSettings()));
             }
-            if(!$this->getUseTwigTemplates()){
+            if (!$this->getUseTwigTemplates()) {
                 $this->setTwigFooterTemplate('');
             }
             $time = $this->getData('mep_cron_start_time');
             $frequency = $this->getData('mep_cron_frequency');
-            $frequencyDaily   = Mage_Adminhtml_Model_System_Config_Source_Cron_Frequency::CRON_DAILY;
-            $frequencyWeekly  = Mage_Adminhtml_Model_System_Config_Source_Cron_Frequency::CRON_WEEKLY;
+            $frequencyDaily = Mage_Adminhtml_Model_System_Config_Source_Cron_Frequency::CRON_DAILY;
+            $frequencyWeekly = Mage_Adminhtml_Model_System_Config_Source_Cron_Frequency::CRON_WEEKLY;
             $frequencyMonthly = Mage_Adminhtml_Model_System_Config_Source_Cron_Frequency::CRON_MONTHLY;
 
             $cronExprArray = array(
@@ -130,7 +132,7 @@ class Flagbit_MEP_Model_Profile extends Mage_Core_Model_Abstract
         $collection->addFieldToFilter('profile_id', array('eq' => $this->getId()))
             ->setOrder('position', 'ASC');
 
-        foreach($collection as $mappingItem){
+        foreach ($collection as $mappingItem) {
             $mappingItem->setId(null)
                 ->setProfileId($newProfile->getId())
                 ->save();
@@ -158,33 +160,33 @@ class Flagbit_MEP_Model_Profile extends Mage_Core_Model_Abstract
             ->setOrder('position', 'ASC');
 
 
-        if($template && $this->getUseTwigTemplates()){
+        if ($template && $this->getUseTwigTemplates()) {
             // replace old missing Fields Hint
             $template = preg_replace('/(\R|)(\R|)\{\#\s--\s(.*)\s--\s(.*)\#\}(\R|)/ms', '', $template);
 
             // gen Array with missing Fields
             $newMappings = array();
-            foreach($collection as $mapping){
+            foreach ($collection as $mapping) {
                 $field = $mapping->getData($type == self::TWIG_TEMPLATE_TYPE_HEADER ? 'to_field' : 'attribute_code');
-                if(!empty($field) && strpos($template, $field) === false){
+                if (!empty($field) && strpos($template, $field) === false) {
                     $newMappings[] = $mapping;
                 }
             }
-        }else{
+        } else {
             $newMappings = $collection;
         }
 
         $twigTemplateArray = array();
-        foreach($newMappings as $mapping){
-            $twigTemplateArray[] = $this->getEnclose().$this->_generateTemplateField($mapping, $type).$this->getEnclose();
+        foreach ($newMappings as $mapping) {
+            $twigTemplateArray[] = $this->getEnclose() . $this->_generateTemplateField($mapping, $type) . $this->getEnclose();
         }
         // Template exists but there are new Fields
-        if($template && count($twigTemplateArray) && $this->getUseTwigTemplates()){
-            $template = $template.PHP_EOL.PHP_EOL.'{# -- '.Mage::helper('mep')->__('New fields which can not be automatically mapped').' -- '.PHP_EOL.implode($this->getDelimiter(), $twigTemplateArray).PHP_EOL.'#}';
+        if ($template && count($twigTemplateArray) && $this->getUseTwigTemplates()) {
+            $template = $template . PHP_EOL . PHP_EOL . '{# -- ' . Mage::helper('mep')->__('New fields which can not be automatically mapped') . ' -- ' . PHP_EOL . implode($this->getDelimiter(), $twigTemplateArray) . PHP_EOL . '#}';
 
             // Template does not exists but there are new Fields
-        }elseif(!$template && count($twigTemplateArray)){
-            $template = '{% spaceless %}'.PHP_EOL.implode($this->getDelimiter(), $twigTemplateArray).PHP_EOL.'{% endspaceless %}';
+        } elseif (!$template && count($twigTemplateArray)) {
+            $template = '{% spaceless %}' . PHP_EOL . implode($this->getDelimiter(), $twigTemplateArray) . PHP_EOL . '{% endspaceless %}';
         }
         return $template;
     }
@@ -197,7 +199,7 @@ class Flagbit_MEP_Model_Profile extends Mage_Core_Model_Abstract
     protected function _generateTemplateField(Flagbit_MEP_Model_Mapping $mapping, $type = self::TWIG_TEMPLATE_TYPE_CONTENT)
     {
         $_field = '';
-        switch($type){
+        switch ($type) {
 
             case self::TWIG_TEMPLATE_TYPE_HEADER:
                 $_field = $mapping->getToField();
@@ -205,7 +207,7 @@ class Flagbit_MEP_Model_Profile extends Mage_Core_Model_Abstract
 
             case self::TWIG_TEMPLATE_TYPE_CONTENT:
                 $_modifier = array();
-                switch($mapping->getBackendType()){
+                switch ($mapping->getBackendType()) {
 
                     case 'decimal':
                         $_modifier = array('number_format_array(2, ",", ".")');
@@ -216,17 +218,17 @@ class Flagbit_MEP_Model_Profile extends Mage_Core_Model_Abstract
                         break;
                 }
 
-                $_field =  '{{ '.$mapping->getAttributeCode();
-                $_field .= (count($_modifier) ? '|'.implode('|', $_modifier) : '');
+                $_field = '{{ ' . $mapping->getAttributeCode();
+                $_field .= (count($_modifier) ? '|' . implode('|', $_modifier) : '');
                 $_field .= ' }}';
 
                 // handle mappings with format definition
-                if($mapping->getFormat() || count($mapping->getAttributeCodeAsArray()) > 1){
-                    $_field = '{{ "'.$mapping->getFormat().'"|format('.implode(',', $mapping->getAttributeCodeAsArray()).') }}';
+                if ($mapping->getFormat() || count($mapping->getAttributeCodeAsArray()) > 1) {
+                    $_field = '{{ "' . $mapping->getFormat() . '"|format(' . implode(',', $mapping->getAttributeCodeAsArray()) . ') }}';
                 }
 
                 // handle fixed value Format
-                if($mapping->getAttributeCode() == 'fixed_value_format'){
+                if ($mapping->getAttributeCode() == 'fixed_value_format') {
                     $_field = $mapping->getFormat();
                 }
 
@@ -237,23 +239,24 @@ class Flagbit_MEP_Model_Profile extends Mage_Core_Model_Abstract
         return $_field;
     }
 
-    public function uploadToFtp() {
+    public function uploadToFtp()
+    {
         if ($this->getActivateFtp() == 1) {
             $hostPort = explode(':', $this->getFtpHostPort());
             if (empty($hostPort[0])) {
-                return ;
+                return;
             }
             if (empty($hostPort[1])) {
                 $hostPort[1] = 21;
             }
             $args = array(
                 'host' => trim($hostPort[0]),
-                'port'  => trim($hostPort[1]),
-                'user'  => $this->getFtpUser(),
-                'password'  => $this->getFtpPassword(),
-                'passive'   => true,
-                'path'  => $this->getFtpPath(),
-                'timeout'   => 5
+                'port' => trim($hostPort[1]),
+                'user' => $this->getFtpUser(),
+                'password' => $this->getFtpPassword(),
+                'passive' => true,
+                'path' => $this->getFtpPath(),
+                'timeout' => 5
             );
             $exportFile = $this->_getExportPath($this) . DS . $this->getFilename();
             try {
@@ -271,8 +274,8 @@ class Flagbit_MEP_Model_Profile extends Mage_Core_Model_Abstract
     {
         $exportDir = Mage::getConfig()->getOptions()->getBaseDir() . DS . $profile->getFilepath();
 
-        if(Mage::getConfig()->getOptions()->createDirIfNotExists($exportDir) === FALSE){
-            Mage::throwException('Export Directory is not writable ('.$exportDir.')');
+        if (Mage::getConfig()->getOptions()->createDirIfNotExists($exportDir) === FALSE) {
+            Mage::throwException('Export Directory is not writable (' . $exportDir . ')');
         }
 
         return $exportDir;

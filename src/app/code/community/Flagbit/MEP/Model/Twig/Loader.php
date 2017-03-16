@@ -22,12 +22,12 @@ class Flagbit_MEP_Model_Twig_Loader implements Twig_LoaderInterface, Twig_Exists
     /**
      * Adds or overrides a template.
      *
-     * @param string $name     The template name
+     * @param string $name The template name
      * @param string $template The template source
      */
     public function setTemplate($name, $template)
     {
-        $this->templates[(string) $name] = $template;
+        $this->templates[(string)$name] = $template;
     }
 
     /**
@@ -35,7 +35,7 @@ class Flagbit_MEP_Model_Twig_Loader implements Twig_LoaderInterface, Twig_Exists
      */
     public function getSource($name)
     {
-        $name = (string) $name;
+        $name = (string)$name;
         if (!isset($this->templates[$name])) {
             throw new Twig_Error_Loader(sprintf('Template "%s" is not defined.', $name));
         }
@@ -48,7 +48,7 @@ class Flagbit_MEP_Model_Twig_Loader implements Twig_LoaderInterface, Twig_Exists
      */
     public function exists($name)
     {
-        return isset($this->templates[(string) $name]);
+        return isset($this->templates[(string)$name]);
     }
 
     /**
@@ -56,7 +56,7 @@ class Flagbit_MEP_Model_Twig_Loader implements Twig_LoaderInterface, Twig_Exists
      */
     public function getCacheKey($name)
     {
-        $name = (string) $name;
+        $name = (string)$name;
         if (!isset($this->templates[$name])) {
             throw new Twig_Error_Loader(sprintf('Template "%s" is not defined.', $name));
         }
@@ -69,7 +69,7 @@ class Flagbit_MEP_Model_Twig_Loader implements Twig_LoaderInterface, Twig_Exists
      */
     public function isFresh($name, $time)
     {
-        $name = (string) $name;
+        $name = (string)$name;
         if (!isset($this->templates[$name])) {
             throw new Twig_Error_Loader(sprintf('Template "%s" is not defined.', $name));
         }

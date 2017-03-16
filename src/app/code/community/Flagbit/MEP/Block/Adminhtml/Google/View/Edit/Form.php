@@ -13,29 +13,17 @@ class Flagbit_MEP_Block_Adminhtml_Google_View_Edit_Form extends Mage_Adminhtml_B
                     'legend' => Mage::helper('mep')->__('Google Categories CSV')
                 ));
 
-            if (Mage::app()->isSingleStoreMode()) {
-                $formUpload->addField('launch', 'button',
-                    array(
-                        'label' => Mage::helper('mep')->__('Google categories initialisation'),
-                        'value' => Mage::helper('mep')->__('Start'),
-                        'name' => 'launch',
-                        'class' => 'form-button',
-                        'onclick' => 'startGoogleCategoriesImport(\'' . Mage::helper('adminhtml')->getUrl('adminhtml/google/importcategories') . '\');',
-                    ));
-            } else {
-                $formUpload->addField('launch', 'button',
-                    array(
-                        'label' => Mage::helper('mep')->__('Google categories initialisation'),
-                        'value' => Mage::helper('mep')->__('Start'),
-                        'name' => 'launch',
-                        'class' => 'form-button',
-                        'onclick' => 'startGoogleCategoriesImport('
-                            . '\'' . Mage::helper('adminhtml')->getUrl('adminhtml/google/importcategoriesmultistore') . '\');',
-                    ));
+            $formUpload->addField('launch', 'button',
+                array(
+                    'label' => Mage::helper('mep')->__('Google categories initialisation'),
+                    'value' => Mage::helper('mep')->__('Start'),
+                    'name' => 'launch',
+                    'class' => 'form-button',
+                    'onclick' => 'startGoogleCategoriesImport('
+                        . '\'' . Mage::helper('adminhtml')->getUrl('/google/importcategoriesmultistore') . '\');',
+                ));
 
-            }
         } else {
-
             $form = new Varien_Data_Form(array(
                 'id' => 'edit_form',
                 'action' => $this->getUrl('*/*/save'),
@@ -48,6 +36,7 @@ class Flagbit_MEP_Block_Adminhtml_Google_View_Edit_Form extends Mage_Adminhtml_B
                     array(
                         'legend' => Mage::helper('mep')->__('Select a store')
                     ));
+
 
                 $storeSelection->addField('store_selection_select', 'select',
                     array(

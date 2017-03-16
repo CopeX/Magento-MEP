@@ -100,7 +100,7 @@ class Flagbit_MEP_Model_Export_Entity_Product extends Mage_ImportExport_Model_Ex
                 $path = array();
                 $pathIds = array();
                 for ($i = 1; $i < $pathSize; $i++) {
-                    if(is_a($collection->getItemById($structure[$i]),'Mage_Catalog_Model_Category')){
+                    if (is_a($collection->getItemById($structure[$i]), 'Mage_Catalog_Model_Category')) {
                         $path[] = $collection->getItemById($structure[$i])->getName();
                         $pathIds[] = $structure[$i];
                     }
@@ -121,7 +121,7 @@ class Flagbit_MEP_Model_Export_Entity_Product extends Mage_ImportExport_Model_Ex
      *
      * @param $writer Mage_ImportExport_Model_Export_Adapter_Abstract
      */
-    protected function  _initWriter(&$writer)
+    protected function _initWriter(&$writer)
     {
         $obj_profile = $this->getProfile();
 
@@ -174,7 +174,8 @@ class Flagbit_MEP_Model_Export_Entity_Product extends Mage_ImportExport_Model_Ex
         return $this->_attributeMapping;
     }
 
-    protected function  _getAttributeShipping($attributeCode) {
+    protected function _getAttributeShipping($attributeCode)
+    {
         if (array_key_exists($attributeCode, $this->_shippingAttrCodes)) {
             return $this->_shippingAttrCodes[$attributeCode];
         }
@@ -198,7 +199,8 @@ class Flagbit_MEP_Model_Export_Entity_Product extends Mage_ImportExport_Model_Ex
      *
      * @return int
      */
-    public function countItems() {
+    public function countItems()
+    {
 
         if ($this->hasProfileId()) {
             $filteredProductIds = $this->_getFilteredProductIds();
@@ -215,7 +217,8 @@ class Flagbit_MEP_Model_Export_Entity_Product extends Mage_ImportExport_Model_Ex
      *
      * @return array of Ids
      */
-    protected function _getFilteredProductIds() {
+    protected function _getFilteredProductIds()
+    {
         /* @var $obj_profile Flagbit_MEP_Model_Profile */
         $obj_profile = $this->getProfile();
 
@@ -252,7 +255,8 @@ class Flagbit_MEP_Model_Export_Entity_Product extends Mage_ImportExport_Model_Ex
      *
      * @return Mage_Catalog_Model_Resource_Product_Collection
      */
-    protected function _prepareMepEntityCollection(Mage_Eav_Model_Entity_Collection_Abstract $collection, $filteredIds) {
+    protected function _prepareMepEntityCollection(Mage_Eav_Model_Entity_Collection_Abstract $collection, $filteredIds)
+    {
 
         /* @var $obj_profile Flagbit_MEP_Model_Profile */
         $obj_profile = $this->getProfile();
@@ -278,7 +282,7 @@ class Flagbit_MEP_Model_Export_Entity_Product extends Mage_ImportExport_Model_Ex
 
         $this->_initTaxConfig();
 
-        $this->_initGoogleMapping();
+        $this->_initGoogleMapping($this->getProfile()->getStoreId());
 
         Mage::app()->setCurrentStore(0);
 
@@ -292,13 +296,13 @@ class Flagbit_MEP_Model_Export_Entity_Product extends Mage_ImportExport_Model_Ex
 
 
         if ($this->hasProfileId()) {
-            Mage::helper('mep/log')->info('Starting export '.$this->getProfileId(), $this);
+            Mage::helper('mep/log')->info('Starting export ' . $this->getProfileId(), $this);
 
             /* @var $obj_profile Flagbit_MEP_Model_Profile */
             $obj_profile = $this->getProfile();
             //Mage::app()->setCurrentStore($obj_profile->getStoreId());
 
-            $this->_seoSuffixUrl = (string) Mage::app()->getStore($obj_profile->getStoreId())->getConfig(
+            $this->_seoSuffixUrl = (string)Mage::app()->getStore($obj_profile->getStoreId())->getConfig(
                 Mage_Catalog_Helper_Product::XML_PATH_PRODUCT_URL_SUFFIX
             );
 
@@ -340,19 +344,19 @@ class Flagbit_MEP_Model_Export_Entity_Product extends Mage_ImportExport_Model_Ex
             $size = $collection->getSize();
 
             // write quantity to the log
-            Mage::helper('mep/log')->debug('EXPORT '.$size.' Products', $this);
+            Mage::helper('mep/log')->debug('EXPORT ' . $size . ' Products', $this);
             // write quantity to the database
             $obj_profile->getResource()->saveField('product_count', $size, $this->getProfileId());
 
             // run just a small export for the preview function
-            if($this->_limit){
+            if ($this->_limit) {
                 $this->_exportThread(1, $writer, $this->_limit, $filteredProductIds, $mapping, $shippingAttrCodes);
                 return $writer->getContents();
             }
 
             // to export process in threads for better performance
             $index = 0;
-            if($obj_profile->getUseSingleProcess()){
+            if ($obj_profile->getUseSingleProcess()) {
                 // sacrifice performance to avoid connection locks, for example
                 // on Redis session management
                 $limitProducts = $size;
@@ -362,30 +366,30 @@ class Flagbit_MEP_Model_Export_Entity_Product extends Mage_ImportExport_Model_Ex
                 $limitProducts = 1000;
                 $maxThreads = 5;
             }
-            while(true){
+            while (true) {
                 $index++;
-                $this->_threads[$index] = new Flagbit_MEP_Model_Thread( array($this, '_exportThread') );
+                $this->_threads[$index] = new Flagbit_MEP_Model_Thread(array($this, '_exportThread'));
                 $this->_threads[$index]->start($index, null, $limitProducts, $filteredProductIds, $mapping, $shippingAttrCodes);
 
                 // let the first fork go to ensure that the headline is correct set
-                if($index == 1){
-                    while($this->_threads[$index]->isAlive()){
+                if ($index == 1) {
+                    while ($this->_threads[$index]->isAlive()) {
                         sleep(1);
                     }
                 }
 
-                while( count($this->_threads) >= $maxThreads ) {
+                while (count($this->_threads) >= $maxThreads) {
                     $this->_cleanUpThreads();
                 }
                 $this->_cleanUpThreads();
 
                 // export is complete
-                if($index >= $size/$limitProducts){
+                if ($index >= $size / $limitProducts) {
                     break;
                 }
             }
             // wait for all the threads to finish
-            while( !empty( $this->_threads ) ) {
+            while (!empty($this->_threads)) {
                 $this->_cleanUpThreads();
             }
 
@@ -416,18 +420,18 @@ class Flagbit_MEP_Model_Export_Entity_Product extends Mage_ImportExport_Model_Ex
      */
     protected function _cleanUpThreads()
     {
-        foreach( $this->_threads as $index => $thread ) {
-            if( ! $thread->isAlive() ) {
+        foreach ($this->_threads as $index => $thread) {
+            if (!$thread->isAlive()) {
                 $fileName = Mage::getConfig()->getOptions()->getBaseDir() . DS . $this->getProfile()->getFilepath() . DS . $this->getProfile()->getFilename();
                 $newFileName = $fileName . '.new';
                 $threadContent = file_get_contents($fileName . '.' . $index . '.tmp');
                 file_put_contents($newFileName, $threadContent, FILE_APPEND);
                 unlink($fileName . '.' . $index . '.tmp');
-                unset( $this->_threads[$index] );
+                unset($this->_threads[$index]);
             }
         }
         // let the CPU do its work
-        sleep( 1 );
+        sleep(1);
     }
 
     /**
@@ -440,7 +444,7 @@ class Flagbit_MEP_Model_Export_Entity_Product extends Mage_ImportExport_Model_Ex
 
         $entityCode = $this->getEntityTypeCode();
         $this->_entityTypeId = Mage::getSingleton('eav/config')->getEntityType($entityCode)->getEntityTypeId();
-        $this->_connection   = Mage::getSingleton('core/resource')->getConnection('write');
+        $this->_connection = Mage::getSingleton('core/resource')->getConnection('write');
     }
 
     /**
@@ -456,8 +460,7 @@ class Flagbit_MEP_Model_Export_Entity_Product extends Mage_ImportExport_Model_Ex
      */
     public function _exportThread($offsetProducts, $writer, $limitProducts, $filteredProductIds, $mapping, $shippingAttrCodes)
     {
-        if (is_null($writer))
-        {
+        if (is_null($writer)) {
             $destinationFile = Mage::getConfig()->getOptions()->getBaseDir() . DS . $this->getProfile()->getFilepath() . DS . $this->getProfile()->getFilename() . '.' . $offsetProducts . '.tmp';
             $writer = Mage::helper('mep')->getNewWriteInstance($destinationFile, 'twig');
             $this->_initWriter($writer);
@@ -473,7 +476,7 @@ class Flagbit_MEP_Model_Export_Entity_Product extends Mage_ImportExport_Model_Ex
         $this->_shippingAttrCodes = $shippingAttrCodes;
         Mage::helper('mep/log')->debug('START Thread: ' . $offsetProducts, $this);
         $objProfile = $this->getProfile();
-        if($this->_limit !== null &&  $offsetProducts > 1){
+        if ($this->_limit !== null && $offsetProducts > 1) {
             return false;
         }
         $storeId = $objProfile->getStoreId();
@@ -485,13 +488,13 @@ class Flagbit_MEP_Model_Export_Entity_Product extends Mage_ImportExport_Model_Ex
             ->addStoreFilter($objProfile->getStoreId())
             ->setPage($offsetProducts, $limitProducts)
             ->addAttributeToSelect('*');
-        if (!empty($filteredProductIds)){
+        if (!empty($filteredProductIds)) {
             $collection->addFieldToFilter("entity_id", array('in' => $filteredProductIds));
         }
 
         Mage::helper('mep/log')->debug('Looping on products', $this);
 
-        if($objProfile->getUseSingleProcess()) {
+        if ($objProfile->getUseSingleProcess()) {
             // we need to walk collection one by one, slower but needed.
             // due to race conditions on Redis we are invoking only one thread
             // with all products loaded in collection.
@@ -505,8 +508,8 @@ class Flagbit_MEP_Model_Export_Entity_Product extends Mage_ImportExport_Model_Ex
             $collection->addOptionsToResult();
             foreach ($collection as $item) {
                 $this->_writeRow(array(
-                        'row' => $item, 'mapping' => $mapping, 'offset' => $offsetProducts, 'writer' => $writer
-                    ));
+                    'row' => $item, 'mapping' => $mapping, 'offset' => $offsetProducts, 'writer' => $writer
+                ));
             }
 
             $collection->clear();
@@ -524,9 +527,10 @@ class Flagbit_MEP_Model_Export_Entity_Product extends Mage_ImportExport_Model_Ex
      *
      * @param array $args
      */
-    public function _writeRow($args) {
+    public function _writeRow($args)
+    {
 
-        if(is_array($args['row'])) {
+        if (is_array($args['row'])) {
             $item = Mage::getModel('catalog/product');
             $item->setData($args['row']);
             if ($item->getHasOptions()) {
@@ -575,8 +579,7 @@ class Flagbit_MEP_Model_Export_Entity_Product extends Mage_ImportExport_Model_Ex
                 //Taking care of existing value for current attribute
                 $newAttrCode = $attrCode;
                 $attrCount = 1;
-                while (array_key_exists($newAttrCode, $currentRow))
-                {
+                while (array_key_exists($newAttrCode, $currentRow)) {
                     $newAttrCode = $attrCode . '_' . $attrCount++;
                 }
                 $attrCode = $newAttrCode;
@@ -584,13 +587,12 @@ class Flagbit_MEP_Model_Export_Entity_Product extends Mage_ImportExport_Model_Ex
                 $currentRow[$attrCode] = $resultValue;
             }
         }
-        if($offsetProducts != 1) {
+        if ($offsetProducts != 1) {
             $writer->setHeaderIsDisabled();
         }
         try {
             $writer->writeRow($currentRow);
-        }
-        catch (Exception $e) {
+        } catch (Exception $e) {
             Mage::helper('mep/log')->err('Twig exception: ' . $e->getMessage(), $this);
         }
 
@@ -600,17 +602,15 @@ class Flagbit_MEP_Model_Export_Entity_Product extends Mage_ImportExport_Model_Ex
      * Check if a product has inherited product, get attribute value if so and cache them
      * Get attribute value from normal item if no inherited product
      */
-    protected function  _manageAttributeInheritance($item, $attrCode, $mapItem)
+    protected function _manageAttributeInheritance($item, $attrCode, $mapItem)
     {
         $attrValues = array();
         $inheritanceType = $mapItem->getInheritanceType();
         if ($inheritanceType == 'from_child') {
             $cacheKey = 'children';
-        }
-        elseif ($inheritanceType == 'from_parent') {
+        } elseif ($inheritanceType == 'from_parent') {
             $cacheKey = 'parents';
-        }
-        else {
+        } else {
             return null;
         }
         $hasInheritor = false;
@@ -620,8 +620,7 @@ class Flagbit_MEP_Model_Export_Entity_Product extends Mage_ImportExport_Model_Ex
                 if (isset($inheritorIds[0])) {
                     $inheritorIds = $inheritorIds[0];
                 }
-            }
-            else {
+            } else {
                 $inheritorIds = Mage::getModel('catalog/product_type_configurable')->getParentIdsByChild($item->getId());
                 if (empty($inheritorIds)) {
                     $inheritorIds = Mage::getModel('catalog/product_type_grouped')->getParentIdsByChild($item->getId());
@@ -632,8 +631,7 @@ class Flagbit_MEP_Model_Export_Entity_Product extends Mage_ImportExport_Model_Ex
                 $hasInheritor = true;
                 $attrValues = $this->_doInheritanceAndCache($item, $inheritorIds, $attrCode, $mapItem, $cacheKey);
             }
-        }
-        else { //If there are inheritor cached
+        } else { //If there are inheritor cached
             $inheritor = $this->_itemsCache[$cacheKey][$item->getId()];
             if (!empty($inheritor)) { //If there are inheritor
                 $hasInheritor = true;
@@ -650,7 +648,8 @@ class Flagbit_MEP_Model_Export_Entity_Product extends Mage_ImportExport_Model_Ex
     /*
      * Parse each inherited product to get attribute value
      */
-    protected function  _doInheritance($items, $attrCode, $mapItem) {
+    protected function _doInheritance($items, $attrCode, $mapItem)
+    {
         $attrValues = array();
         foreach ($items as $item) {
             $currentValue = $this->_manageAttributeForItem($item, $attrCode, $mapItem);
@@ -669,7 +668,8 @@ class Flagbit_MEP_Model_Export_Entity_Product extends Mage_ImportExport_Model_Ex
      *
      * Parse each inherited product to get attribute value and cache them
      */
-    protected function  _doInheritanceAndCache($parent, $items, $attrCode, $mapItem, $cacheType){
+    protected function _doInheritanceAndCache($parent, $items, $attrCode, $mapItem, $cacheType)
+    {
         $attrValues = array();
         /** @var Mage_Catalog_Model_Resource_Product_Collection $collection */
         $collection = Mage::helper('mep')->getProductsCollection();
@@ -678,12 +678,10 @@ class Flagbit_MEP_Model_Export_Entity_Product extends Mage_ImportExport_Model_Ex
         if (!empty($settings['is_in_stock']) && $settings['is_in_stock'] == 2) {
             $settings['is_in_stock'] = '';
         }
-        if (isset($settings['is_in_stock']) && strlen($settings['is_in_stock']))
-        {
+        if (isset($settings['is_in_stock']) && strlen($settings['is_in_stock'])) {
             $isInStockFilter = intval($settings['is_in_stock']);
             $isInStockCondition = 'is_in_stock = ' . $isInStockFilter;
-            if ($isInStockFilter == 1)
-            {
+            if ($isInStockFilter == 1) {
                 $isInStockCondition = '(' . $isInStockCondition . ' OR manage_stock = 0)';
             }
             $collection->getSelect()->where($isInStockCondition);
@@ -714,7 +712,8 @@ class Flagbit_MEP_Model_Export_Entity_Product extends Mage_ImportExport_Model_Ex
     /*
      * Insert a new attribute value in the given array if the value is not empty and not already in the array
      */
-    protected function  _addAttributeToArray($value, &$attrValues) {
+    protected function _addAttributeToArray($value, &$attrValues)
+    {
         if ((!is_array($value) && strlen($value) || is_array($value) && !empty($value))
             && !in_array($value, $attrValues)
         ) {
@@ -725,15 +724,14 @@ class Flagbit_MEP_Model_Export_Entity_Product extends Mage_ImportExport_Model_Ex
     /*
      * Manage attribute value for a given item
      */
-    protected function  _manageAttributeForItem($item, $attrCode, $mapItem) {
+    protected function _manageAttributeForItem($item, $attrCode, $mapItem)
+    {
         //Mage::app()->setCurrentStore($this->getProfile()->getStoreId());
         if (($attributeMapping = $this->_getAttributeMapping($attrCode))) {
             $attrValue = $this->_manageAttributeMapping($attributeMapping, $item);
-        }
-        elseif (($attributeShipping = $this->_getAttributeShipping($attrCode))) {
+        } elseif (($attributeShipping = $this->_getAttributeShipping($attrCode))) {
             $attrValue = Mage::helper('mep/shipping')->emulateCheckout($item, $this->getProfile()->getStoreId(), $attributeShipping);
-        }
-        else {
+        } else {
             $attrValue = $this->_getAttributeValue($item, $attrCode, $mapItem);
         }
         //Mage::app()->setCurrentStore(0);
@@ -744,7 +742,7 @@ class Flagbit_MEP_Model_Export_Entity_Product extends Mage_ImportExport_Model_Ex
      * Get attribute value for a given item
      * Apply filters if necessary
      */
-    protected function  _getAttributeValue($item, $attrCode, $mapItem)
+    protected function _getAttributeValue($item, $attrCode, $mapItem)
     {
         //Callback method configuration for special attribute
         Mage::app()->setCurrentStore($this->getProfile()->getStoreId());
@@ -765,17 +763,17 @@ class Flagbit_MEP_Model_Export_Entity_Product extends Mage_ImportExport_Model_Ex
             'google_mapping' => '_getGoogleMapping',
             '_options' => '_getCustomOptions',
             'manage_stock' => '_getManageStock',
-			'type' => '_getType'
+            'type' => '_getType'
         );
         $attrValue = $item->getData($attrCode);
 
-        if(empty($attrValue)) {
+        if (empty($attrValue)) {
             $item->load($item->getId());
             $attrValue = $item->getData($attrCode);
         }
 
         if (isset($attributeValueFilter[$attrCode])) {
-            $attrValue = $this->$attributeValueFilter[$attrCode]($item, $mapItem);
+            $attrValue = $this->{$attributeValueFilter[$attrCode]}($item, $mapItem);
         }
         if (isset($this->_attributeValues[$attrCode])) {
             if (isset($this->_attributeValues[$attrCode][$attrValue])) {
@@ -795,7 +793,8 @@ class Flagbit_MEP_Model_Export_Entity_Product extends Mage_ImportExport_Model_Ex
         }
         Mage::app()->setCurrentStore(0);
 
-        $eventObject = new Varien_Object(array('value' => $attrValue, 'attribute_code' => $attrCode, 'item' => $mapItem, 'product' => $item));
+        $eventObject = new Varien_Object(array('value' => $attrValue, 'attribute_code' => $attrCode, 'item' => $mapItem,
+                                               'product' => $item));
         Mage::dispatchEvent('mep_product_attribute_value', array('export' => $eventObject));
 
         return $eventObject->getValue();
@@ -804,7 +803,8 @@ class Flagbit_MEP_Model_Export_Entity_Product extends Mage_ImportExport_Model_Ex
     /*
      * Map attribute value
      */
-    protected function  _manageAttributeMapping($attributeMapping, $item) {
+    protected function _manageAttributeMapping($attributeMapping, $item)
+    {
         $sourceAttributeCode = $attributeMapping->getSourceAttributeCode();
         $attrValue = $item->getData($sourceAttributeCode);
         if ($sourceAttributeCode == 'category') {
@@ -817,8 +817,7 @@ class Flagbit_MEP_Model_Export_Entity_Product extends Mage_ImportExport_Model_Ex
             foreach ($itemCategoriesIds as $itemCategoryId) {
                 if (isset($this->_categoryIds[$itemCategoryId]) && count($this->_categoryIds[$itemCategoryId]) > $currentCount) {
                     $categoryId = $itemCategoryId;
-                }
-                else {
+                } else {
                     break;
                 }
                 $currentCount = count($this->_categoryIds[$itemCategoryId]);
@@ -828,13 +827,11 @@ class Flagbit_MEP_Model_Export_Entity_Product extends Mage_ImportExport_Model_Ex
                     $attrValue = implode($this->getProfile()->getCategoryDelimiter(), $attributeMapping->getOptionValue($this->_categoryIds[$categoryId], $this->getProfile()->getStoreId()));
                     return $attrValue;
                 }
-            }
-            else {
+            } else {
                 $attrValue = $attributeMapping->getOptionValue($categoryId, $this->getProfile()->getStoreId());
                 return $attrValue;
             }
-        }
-        else {
+        } else {
             if (!empty($attrValue)) {
                 if ($this->_attributeTypes[$sourceAttributeCode] == 'multiselect') {
                     $attrValue = $attributeMapping->getOptionValue(explode(',', $attrValue), $this->getProfile()->getStoreId());
@@ -879,7 +876,7 @@ class Flagbit_MEP_Model_Export_Entity_Product extends Mage_ImportExport_Model_Ex
             $includeTax = null;
 
             $displayConfig = $this->_taxConfig->getPriceDisplayType($objProfile->getStoreId());
-            if($displayConfig == Mage_Tax_Model_Config::DISPLAY_TYPE_BOTH) {
+            if ($displayConfig == Mage_Tax_Model_Config::DISPLAY_TYPE_BOTH) {
                 $includeTax = true;
             }
 
@@ -889,7 +886,7 @@ class Flagbit_MEP_Model_Export_Entity_Product extends Mage_ImportExport_Model_Ex
         return $item->getPrice();
     }
 
-    protected function  _getPriceWithCatalogRule($item, $mapItem)
+    protected function _getPriceWithCatalogRule($item, $mapItem)
     {
         $objProfile = $this->getProfile();
 
@@ -909,7 +906,7 @@ class Flagbit_MEP_Model_Export_Entity_Product extends Mage_ImportExport_Model_Ex
      *
      * @return float
      */
-    protected function  _getGrossPrice($item, $mapItem)
+    protected function _getGrossPrice($item, $mapItem)
     {
         if ($item->getTypeId() == 'bundle') {
             return Mage::getModel('bundle/product_price')->getTotalPrices($item, 'min', true);
@@ -967,7 +964,8 @@ class Flagbit_MEP_Model_Export_Entity_Product extends Mage_ImportExport_Model_Ex
         return intval($status->getIsInStock());
     }
 
-    protected function  _getImageUrl($item, $mapItem) {
+    protected function _getImageUrl($item, $mapItem)
+    {
         $item->load('media_gallery');
         $options = unserialize($mapItem->getOptions());
         $image_type = (empty($options['image_url_type']) ? 'image' : $options['image_url_type']);
@@ -982,22 +980,24 @@ class Flagbit_MEP_Model_Export_Entity_Product extends Mage_ImportExport_Model_Ex
      * @param $item Mage_Catalog_Model_Product
      * @param $mapItem
      */
-    protected function _getMediaGallery($item, $mapItem) {
+    protected function _getMediaGallery($item, $mapItem)
+    {
         $item->load('media_gallery');
         $images = array();
-        foreach($item->getMediaGalleryImages() as $image) {
+        foreach ($item->getMediaGalleryImages() as $image) {
             $images[] = $image['url'];
         }
 
         return implode($this->getProfile()->getMediaGalleryDelimiter(), $images);
     }
 
-    protected function  _getProductCategory($item, $mapItem) {
+    protected function _getProductCategory($item, $mapItem)
+    {
         $categoryIds = $item->getCategoryIds();
         $categoryId = null;
         $max = 0;
         foreach ($categoryIds as $_categoryId) {
-            if(isset($this->_categoryIds[$_categoryId]) && count($this->_categoryIds[$_categoryId]) > $max){
+            if (isset($this->_categoryIds[$_categoryId]) && count($this->_categoryIds[$_categoryId]) > $max) {
                 $max = count($this->_categoryIds[$_categoryId]);
                 $categoryId = $_categoryId;
             }
@@ -1009,12 +1009,13 @@ class Flagbit_MEP_Model_Export_Entity_Product extends Mage_ImportExport_Model_Ex
         return $attrValue;
     }
 
-    protected function  _getProductCategoryId($item, $mapItem) {
+    protected function _getProductCategoryId($item, $mapItem)
+    {
         $categoryIds = $item->getCategoryIds();
         $categoryId = null;
         $max = 0;
         foreach ($categoryIds as $_categoryId) {
-            if(isset($this->_categoryIds[$_categoryId]) && count($this->_categoryIds[$_categoryId]) > $max){
+            if (isset($this->_categoryIds[$_categoryId]) && count($this->_categoryIds[$_categoryId]) > $max) {
                 $max = count($this->_categoryIds[$_categoryId]);
                 $categoryId = $_categoryId;
             }
@@ -1026,12 +1027,13 @@ class Flagbit_MEP_Model_Export_Entity_Product extends Mage_ImportExport_Model_Ex
         return $attrValue;
     }
 
-    protected function  _getProductCategories($item, $mapItem) {
+    protected function _getProductCategories($item, $mapItem)
+    {
         $categoryIds = $item->getCategoryIds();
         $attrValue = '';
         $categories = array();
         foreach ($categoryIds as $_categoryId) {
-            if(isset($this->_categoryIds[$_categoryId])){
+            if (isset($this->_categoryIds[$_categoryId])) {
                 if (isset($this->_categories[$_categoryId])) {
                     $categories[] = $this->_categories[$_categoryId];
                 }
@@ -1043,13 +1045,15 @@ class Flagbit_MEP_Model_Export_Entity_Product extends Mage_ImportExport_Model_Ex
         return $attrValue;
     }
 
-    protected function _getBasePriceReferenceAmount($item, $mapItem) {
+    protected function _getBasePriceReferenceAmount($item, $mapItem)
+    {
         $attrValue = Mage::helper('baseprice')->getBasePriceLabel($item, '{{baseprice}}');
         $attrValue = str_replace(array(' €'), '', strip_tags($attrValue));
         return $attrValue;
     }
 
-    protected function  _getIsSalable($item, $mapItem) {
+    protected function _getIsSalable($item, $mapItem)
+    {
         $attrValue = intval($item->getTypeInstance()->isSalable());
         return $attrValue;
     }
@@ -1060,7 +1064,8 @@ class Flagbit_MEP_Model_Export_Entity_Product extends Mage_ImportExport_Model_Ex
         return intval($status->getManageStock());
     }
 
-    protected function  _getGoogleMapping($item, $mapItem) {
+    protected function _getGoogleMapping($item, $mapItem)
+    {
         $categoryIds = $item->getCategoryIds();
         $categoryId = $this->_getMaxDepthCategory($categoryIds);
         $attrValue = '';
@@ -1089,11 +1094,12 @@ class Flagbit_MEP_Model_Export_Entity_Product extends Mage_ImportExport_Model_Ex
         return $attrValue;
     }
 
-    protected function _getMaxDepthCategory($categoryIds){
+    protected function _getMaxDepthCategory($categoryIds)
+    {
         $categoryId = null;
         $max = 0;
         foreach ($categoryIds as $_categoryId) {
-            if(isset($this->_categoryIds[$_categoryId]) && count($this->_categoryIds[$_categoryId]) > $max){
+            if (isset($this->_categoryIds[$_categoryId]) && count($this->_categoryIds[$_categoryId]) > $max) {
                 $max = count($this->_categoryIds[$_categoryId]);
                 $categoryId = $_categoryId;
             }
@@ -1101,7 +1107,8 @@ class Flagbit_MEP_Model_Export_Entity_Product extends Mage_ImportExport_Model_Ex
         return $categoryId;
     }
 
-    protected function  _getCustomOptions($item, $mapItem) {
+    protected function _getCustomOptions($item, $mapItem)
+    {
         $options = $item->getOptions();
         $result = array();
         foreach ($options as $option) {
@@ -1145,7 +1152,7 @@ class Flagbit_MEP_Model_Export_Entity_Product extends Mage_ImportExport_Model_Ex
      */
     protected function _initTaxConfig()
     {
-        if(is_null($this->_taxConfig)) {
+        if (is_null($this->_taxConfig)) {
             $this->_taxConfig = Mage::getSingleton('tax/config');
         }
         return $this->_taxConfig;
@@ -1153,7 +1160,7 @@ class Flagbit_MEP_Model_Export_Entity_Product extends Mage_ImportExport_Model_Ex
 
     protected function _getStockItem(Mage_Catalog_Model_Product $product)
     {
-        if(!isset($this->_stockItems[$product->getId()])) {
+        if (!isset($this->_stockItems[$product->getId()])) {
             $stockInfos = Mage::getModel('cataloginventory/stock_item')->loadByProduct($product->getId());
             $this->_stockItems[$product->getId()] = $stockInfos;
         }
@@ -1167,17 +1174,19 @@ class Flagbit_MEP_Model_Export_Entity_Product extends Mage_ImportExport_Model_Ex
      *
      * @return array
      */
-    protected function  _initGoogleMapping() {
+    protected function _initGoogleMapping($store_id)
+    {
         $mappings = Mage::getResourceModel('mep/googleMapping_collection');
-        $taxonomyIds = array();
+        $taxonomyIds = array()
+            ->addFieldToFilter('store_id', $store_id);
         foreach ($mappings as $mapping) {
             $mappingIds = explode('|', $mapping->getGoogleMappingIds());
             $mapping->setMappingIds($mappingIds);
-            foreach($mappingIds as $mappingId){
+            foreach ($mappingIds as $mappingId) {
                 $taxonomyIds[$mappingId] = $mappingId;
             }
         }
-        $taxonomies = Mage::getResourceModel('mep/googleTaxonomies_collection')->addFieldToFilter('taxonomy_id', array( "in" => $taxonomyIds));
+        $taxonomies = Mage::getResourceModel('mep/googleTaxonomies_collection')->addFieldToFilter('taxonomy_id', array("in" => $taxonomyIds));
         foreach ($mappings as $mapping) {
             $currentMapping = array();
             $mappingIds = $mapping->getMappingIds();

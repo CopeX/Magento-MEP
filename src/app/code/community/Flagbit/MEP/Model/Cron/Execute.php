@@ -1,6 +1,7 @@
 <?php
 
-class   Flagbit_MEP_Model_Cron_Execute {
+class   Flagbit_MEP_Model_Cron_Execute
+{
 
     /**
      * @var Flagbit_MEP_Model_Cron
@@ -24,24 +25,25 @@ class   Flagbit_MEP_Model_Cron_Execute {
         register_shutdown_function(array('Flagbit_MEP_Model_Cron_Execute', 'shutdownHandler'));
 
         $schedules = Mage::getModel('mep/cron')
-                        ->getCollection()
-                        ->addFieldToFilter('status', Mage_Cron_Model_Schedule::STATUS_PENDING)
-                        ->addOrder('cron_id', Varien_Data_Collection_Db::SORT_ORDER_DESC)
-                        ->load();
+            ->getCollection()
+            ->addFieldToFilter('status', Mage_Cron_Model_Schedule::STATUS_PENDING)
+            ->addOrder('cron_id', Varien_Data_Collection_Db::SORT_ORDER_DESC)
+            ->load();
 
         // get the first schedule
-        foreach($schedules as $schedule){
+        foreach ($schedules as $schedule) {
 
             // skip future tasks
             if (strtotime($schedule->getScheduledAt()) > $now) {
                 continue;
             }
 
-            if($schedule instanceof Flagbit_MEP_Model_Cron
-                && $schedule->getId()){
+            if ($schedule instanceof Flagbit_MEP_Model_Cron
+                && $schedule->getId()
+            ) {
 
-                if($this->countRunningCron()){
-                    Mage::helper('mep/log')->debug('Cannot run Profile '.$schedule->getProfileId().' because there is already a Job running', $this);
+                if ($this->countRunningCron()) {
+                    Mage::helper('mep/log')->debug('Cannot run Profile ' . $schedule->getProfileId() . ' because there is already a Job running', $this);
                     return;
                 }
 
@@ -54,18 +56,18 @@ class   Flagbit_MEP_Model_Cron_Execute {
                 $schedule->setStatus(Mage_Cron_Model_Schedule::STATUS_RUNNING)->save();
 
                 // run Profile
-                try{
+                try {
                     Mage::getModel('mep/observer')->runProfile($schedule->getProfileId(), false);
-                }catch (Exception $e){
+                } catch (Exception $e) {
                     $schedule->setStatus(Mage_Cron_Model_Schedule::STATUS_ERROR)
-                    ->setLogs($e->getMessage())
-                    ->save();
+                        ->setLogs($e->getMessage())
+                        ->save();
                 }
 
                 // set cron success
                 $schedule->setFinishedAt(strftime('%Y-%m-%d %H:%M:%S', time()))
-                        ->setStatus(Mage_Cron_Model_Schedule::STATUS_SUCCESS)
-                        ->save();
+                    ->setStatus(Mage_Cron_Model_Schedule::STATUS_SUCCESS)
+                    ->save();
             }
             // only one task per instance to get right of limits and strange behavior
             break;
@@ -80,14 +82,15 @@ class   Flagbit_MEP_Model_Cron_Execute {
      *
      * @return int
      */
-    public function countRunningCron(){
+    public function countRunningCron()
+    {
 
         $lifetime = Mage::getStoreConfig(self::XML_PATH_CRON_LIFETIME);
 
         $counter = Mage::getModel('mep/cron')->getCollection()
             ->addFieldToFilter('main_table.status', array('eq' => Mage_Cron_Model_Schedule::STATUS_RUNNING));
 
-        if ($lifetime){
+        if ($lifetime) {
             $counter->addFieldToFilter('map.scheduled', array('gt' => time() - $lifetime));
         }
         return $counter->count();
@@ -98,14 +101,15 @@ class   Flagbit_MEP_Model_Cron_Execute {
      *
      * @return Flagbit_MEP_Model_Cron_Execute
      */
-    protected function _removeExpiredTasks(){
+    protected function _removeExpiredTasks()
+    {
 
         $lifetime = Mage::getStoreConfig(self::XML_PATH_CRON_LIFETIME);
 
         /*@var $collection Flagbit_MEP_Model_Mysql4_Cron_Collection */
         $collection = Mage::getModel('mep/cron')->getCollection();
 
-        if ($lifetime){
+        if ($lifetime) {
             $collection->addFieldToFilter('map.scheduled', array('lt' => time() - $lifetime));
             $collection->addFieldToFilter('main_table.status', array('eq' => Mage_Cron_Model_Schedule::STATUS_RUNNING));
 
@@ -126,18 +130,20 @@ class   Flagbit_MEP_Model_Cron_Execute {
      *
      * @return void
      */
-    public static function shutdownHandler() {
-       $error = error_get_last();
-       if ($error && (
-             ($error['type'] == E_ERROR) ||
-             ($error['type'] == E_PARSE) ||
-             ($error['type'] == E_RECOVERABLE_ERROR))) {
+    public static function shutdownHandler()
+    {
+        $error = error_get_last();
+        if ($error && (
+                ($error['type'] == E_ERROR) ||
+                ($error['type'] == E_PARSE) ||
+                ($error['type'] == E_RECOVERABLE_ERROR))
+        ) {
             $msg = $error['message'] . "\nLine: " . $error['line'] . ' - File: ' . $error['file'];
 
             if (class_exists('Mage')) {
                 Mage::helper('mep/log')->err('ERROR Export: ' . $msg);
 
-                if(is_object(self::$currentSchedule)){
+                if (is_object(self::$currentSchedule)) {
 
                     self::$currentSchedule
                         ->setStatus(Mage_Cron_Model_Schedule::STATUS_ERROR)
@@ -146,7 +152,7 @@ class   Flagbit_MEP_Model_Cron_Execute {
 
                 }
             }
-       }
+        }
     }
 
     /**
@@ -160,8 +166,7 @@ class   Flagbit_MEP_Model_Cron_Execute {
             ->addFieldToFilter('cron_activated', '1')
             ->load();
 
-        foreach ($profiles as $profile)
-        {
+        foreach ($profiles as $profile) {
             $id = $profile->getId();
             $scheduleAheadFor = 60 * 60;
             $schedule = Mage::getModel('mep/cron');
@@ -171,8 +176,7 @@ class   Flagbit_MEP_Model_Cron_Execute {
             $schedule->setCronExpr($profile->getCronExpression())
                 ->setStatus(Mage_Cron_Model_Schedule::STATUS_PENDING)
                 ->setProfileId($id)
-                ->setIgnoreProfileStatus(0)
-            ;
+                ->setIgnoreProfileStatus(0);
 
             $_errorMsg = null;
             for ($time = $now; $time < $timeAhead; $time += 60) {
@@ -181,13 +185,12 @@ class   Flagbit_MEP_Model_Cron_Execute {
                     // time does not match cron expression
                     continue;
                 }
-                if ($this->_alreadyScheduled($schedule))
-                {
-                    continue ;
+                if ($this->_alreadyScheduled($schedule)) {
+                    continue;
                 }
                 $_errorMsg = null;
 
-                Mage::helper('mep/log')->debug('SCHEDULE planned Profile ' .$id . ' on '.date('c', $time), $this);
+                Mage::helper('mep/log')->debug('SCHEDULE planned Profile ' . $id . ' on ' . date('c', $time), $this);
                 $schedule->unsScheduleId()->save();
                 break;
             }

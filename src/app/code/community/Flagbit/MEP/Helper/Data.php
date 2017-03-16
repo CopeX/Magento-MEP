@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Helper
  *
@@ -10,10 +11,10 @@
  * @version 0.1.0
  * @since 0.1.0
  */
-
 class Flagbit_MEP_Helper_Data extends Mage_Core_Helper_Abstract
 {
-    const CONFIG_KEY_FORMATS  = 'global/mep/export_file_formats';
+    const CONFIG_KEY_FORMATS = 'global/mep/export_file_formats';
+
     /**
      * get current Profile Data
      *
@@ -29,12 +30,11 @@ class Flagbit_MEP_Helper_Data extends Mage_Core_Helper_Abstract
         } else {
             $data = array();
         }
-        if(is_bool($idOnly) && $idOnly === true){
+        if (is_bool($idOnly) && $idOnly === true) {
             $data = isset($data['id']) ? $data['id'] : null;
-        }elseif($idOnly){
+        } elseif ($idOnly) {
             $data = isset($data[$idOnly]) ? $data[$idOnly] : '';
-        }
-        else {
+        } else {
             if (empty($data['ftp_host_port'])) {
                 $data['ftp_host_port'] = ':21';
             }
@@ -78,13 +78,20 @@ class Flagbit_MEP_Helper_Data extends Mage_Core_Helper_Abstract
     public function normalize($string)
     {
         $table = array(
-            'Š' => 'S', 'š' => 's', 'Đ' => 'Dj', 'đ' => 'dj', 'Ž' => 'Z', 'ž' => 'z', 'Č' => 'C', 'č' => 'c', 'Ć' => 'C', 'ć' => 'c',
-            'À' => 'A', 'Á' => 'A', 'Â' => 'A', 'Ã' => 'A', 'Ä' => 'Ae', 'Å' => 'A', 'Æ' => 'A', 'Ç' => 'C', 'È' => 'E', 'É' => 'E',
-            'Ê' => 'E', 'Ë' => 'E', 'Ì' => 'I', 'Í' => 'I', 'Î' => 'I', 'Ï' => 'I', 'Ñ' => 'N', 'Ò' => 'O', 'Ó' => 'O', 'Ô' => 'O',
-            'Õ' => 'O', 'Ö' => 'Oe', 'Ø' => 'O', 'Ù' => 'U', 'Ú' => 'U', 'Û' => 'U', 'Ü' => 'Ue', 'Ý' => 'Y', 'Þ' => 'B', 'ß' => 'Ss',
-            'à' => 'a', 'á' => 'a', 'â' => 'a', 'ã' => 'a', 'ä' => 'ae', 'å' => 'a', 'æ' => 'a', 'ç' => 'c', 'è' => 'e', 'é' => 'e',
-            'ê' => 'e', 'ë' => 'e', 'ì' => 'i', 'í' => 'i', 'î' => 'i', 'ï' => 'i', 'ð' => 'o', 'ñ' => 'n', 'ò' => 'o', 'ó' => 'o',
-            'ô' => 'o', 'õ' => 'o', 'ö' => 'oe', 'ø' => 'o', 'ù' => 'u', 'ú' => 'u', 'û' => 'u', 'ý' => 'y', 'ý' => 'y', 'þ' => 'b',
+            'Š' => 'S', 'š' => 's', 'Đ' => 'Dj', 'đ' => 'dj', 'Ž' => 'Z', 'ž' => 'z', 'Č' => 'C', 'č' => 'c',
+            'Ć' => 'C', 'ć' => 'c',
+            'À' => 'A', 'Á' => 'A', 'Â' => 'A', 'Ã' => 'A', 'Ä' => 'Ae', 'Å' => 'A', 'Æ' => 'A', 'Ç' => 'C', 'È' => 'E',
+            'É' => 'E',
+            'Ê' => 'E', 'Ë' => 'E', 'Ì' => 'I', 'Í' => 'I', 'Î' => 'I', 'Ï' => 'I', 'Ñ' => 'N', 'Ò' => 'O', 'Ó' => 'O',
+            'Ô' => 'O',
+            'Õ' => 'O', 'Ö' => 'Oe', 'Ø' => 'O', 'Ù' => 'U', 'Ú' => 'U', 'Û' => 'U', 'Ü' => 'Ue', 'Ý' => 'Y',
+            'Þ' => 'B', 'ß' => 'Ss',
+            'à' => 'a', 'á' => 'a', 'â' => 'a', 'ã' => 'a', 'ä' => 'ae', 'å' => 'a', 'æ' => 'a', 'ç' => 'c', 'è' => 'e',
+            'é' => 'e',
+            'ê' => 'e', 'ë' => 'e', 'ì' => 'i', 'í' => 'i', 'î' => 'i', 'ï' => 'i', 'ð' => 'o', 'ñ' => 'n', 'ò' => 'o',
+            'ó' => 'o',
+            'ô' => 'o', 'õ' => 'o', 'ö' => 'oe', 'ø' => 'o', 'ù' => 'u', 'ú' => 'u', 'û' => 'u', 'ý' => 'y', 'ý' => 'y',
+            'þ' => 'b',
             'ÿ' => 'y', 'Ŕ' => 'R', 'ŕ' => 'r', 'ü' => 'ue',
         );
 
@@ -115,7 +122,7 @@ class Flagbit_MEP_Helper_Data extends Mage_Core_Helper_Abstract
 
         if (isset($validWriters[$fileFormat])) {
             try {
-                if(file_exists($destinationFile) && strpos($destinationFile, 'tmp')){
+                if (file_exists($destinationFile) && strpos($destinationFile, 'tmp')) {
                     unlink($destinationFile);
                 }
                 $writer = Mage::getModel($validWriters[$fileFormat]['model'], $destinationFile);
@@ -125,7 +132,7 @@ class Flagbit_MEP_Helper_Data extends Mage_Core_Helper_Abstract
                     Mage::helper('importexport')->__('Invalid entity model')
                 );
             }
-            if (! $writer instanceof Mage_ImportExport_Model_Export_Adapter_Abstract) {
+            if (!$writer instanceof Mage_ImportExport_Model_Export_Adapter_Abstract) {
                 Mage::throwException(
                     Mage::helper('importexport')->__('Adapter object must be an instance of %s', 'Mage_ImportExport_Model_Export_Adapter_Abstract')
                 );

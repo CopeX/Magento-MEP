@@ -1,6 +1,7 @@
 <?php
 
-class Flagbit_MEP_Model_Twig_Observer_SortArray {
+class Flagbit_MEP_Model_Twig_Observer_SortArray
+{
 
     protected $_adapter;
 
@@ -9,7 +10,8 @@ class Flagbit_MEP_Model_Twig_Observer_SortArray {
      *
      * @param Varien_Event_Observer $observer
      */
-    public function addSortArray($observer) {
+    public function addSortArray($observer)
+    {
         $twig = $observer->getTwig();
         $policy = $observer->getPolicy();
         $this->_adapter = $observer->getAdapter();
@@ -25,14 +27,14 @@ class Flagbit_MEP_Model_Twig_Observer_SortArray {
      * @param string $order
      * @return string
      */
-    public function sortArray($values, $order, $limit = 0) {
+    public function sortArray($values, $order, $limit = 0)
+    {
         $delimiter = $this->_adapter->getConfigurableDelimiter();
         $valuesArray = explode($delimiter, $values);
         if (is_array($valuesArray)) {
             if ($order == 'asc') {
                 sort($valuesArray);
-            }
-            elseif ($order == 'desc') {
+            } elseif ($order == 'desc') {
                 rsort($valuesArray);
             }
             if ($limit > 0) {

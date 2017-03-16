@@ -12,11 +12,10 @@ class   Flagbit_MEP_Helper_Categories extends Mage_Core_Helper_Abstract
     public function getCategoriesTree()
     {
         $storeId = Mage::registry('category_store_id');
-        if ($storeId && empty($this->_tree))
-        {
+        if ($storeId && empty($this->_tree)) {
             $parent = Mage::app()->getStore($storeId)->getRootCategoryId();
             $this->_rootCategory = Mage::getModel('catalog/category')->load($parent);
-            $recursionLevel  = max(0, (int) Mage::app()->getStore($storeId)->getConfig('catalog/navigation/max_depth'));
+            $recursionLevel = max(0, (int)Mage::app()->getStore($storeId)->getConfig('catalog/navigation/max_depth'));
             $this->_tree = Mage::getModel('catalog/category')->getCategories($parent, $recursionLevel);
         }
         return $this->_tree;
@@ -25,14 +24,12 @@ class   Flagbit_MEP_Helper_Categories extends Mage_Core_Helper_Abstract
     public function loadCategoryHtmlTree(Varien_Data_Tree_Node_Collection $categoryCollection, $recursive, &$html)
     {
         $margin = $recursive * 15;
-        foreach ($categoryCollection as $category)
-        {
+        foreach ($categoryCollection as $category) {
             /** @var Varien_Data_Tree_Node $category */
             $categoryId = $category->getId();
 
             $html .= '<div id="category-' . $categoryId . '" class="mep_category_list_item" style="margin-left: ' . $margin . 'px">' . $category->getName() . ' ' . $this->getMappingForTaxonomy(0, $categoryId) . '</div>';
-            if ($category->hasChildren())
-            {
+            if ($category->hasChildren()) {
                 $this->loadCategoryHtmlTree($category->getChildren(), $recursive + 1, $html);
             }
         }
@@ -43,8 +40,7 @@ class   Flagbit_MEP_Helper_Categories extends Mage_Core_Helper_Abstract
     {
         $storeId = Mage::registry('category_store_id');
         $margin = $recursive * 15;
-        foreach ($categoryCollection as $category)
-        {
+        foreach ($categoryCollection as $category) {
             /** @var Varien_Data_Tree_Node $category */
             $categoryId = $category->getId();
             $cat = Mage::getModel('catalog/category')->setStoreId($storeId)->load($categoryId);
@@ -55,8 +51,7 @@ class   Flagbit_MEP_Helper_Categories extends Mage_Core_Helper_Abstract
                 'mapping' => $this->getMappingArrayForTaxonomy(0, $categoryId)
             );
             $array[] = $node;
-            if ($category->hasChildren())
-            {
+            if ($category->hasChildren()) {
                 $this->loadCategoryTreeForGoogle($category->getChildren(), $recursive + 1, $array);
             }
         }
@@ -65,8 +60,7 @@ class   Flagbit_MEP_Helper_Categories extends Mage_Core_Helper_Abstract
     public function loadCategoryTree(Varien_Data_Tree_Node_Collection $categoryCollection, $recursive, &$array)
     {
         $margin = $recursive * 15;
-        foreach ($categoryCollection as $category)
-        {
+        foreach ($categoryCollection as $category) {
             /** @var Varien_Data_Tree_Node $category */
             $categoryId = $category->getId();
 
@@ -77,8 +71,7 @@ class   Flagbit_MEP_Helper_Categories extends Mage_Core_Helper_Abstract
                 'mapping' => $this->getMappingArrayForTaxonomy(0, $categoryId)
             );
             $array[] = $node;
-            if ($category->hasChildren())
-            {
+            if ($category->hasChildren()) {
                 $this->loadCategoryTree($category->getChildren(), $recursive + 1, $array);
             }
         }
@@ -90,15 +83,13 @@ class   Flagbit_MEP_Helper_Categories extends Mage_Core_Helper_Abstract
         $mapping = Mage::getModel('mep/googleMapping');
         $mapping->load($categoryId, 'category_id');
         $googleMappingIds = $mapping->getGoogleMappingIds();
-        if (empty($googleMappingIds))
-        {
+        if (empty($googleMappingIds)) {
             $html = $this->getSelectForTaxonomy(0, $level, $categoryId);
             return $html;
         }
         $html = $this->getSelectForTaxonomy(0, $level, $categoryId);
         $taxonomies = explode('|', $googleMappingIds);
-        foreach ($taxonomies as $taxonomy)
-        {
+        foreach ($taxonomies as $taxonomy) {
             $jsSelect = $this->getJavascriptToSelect($taxonomy, $level, $categoryId);
             $level++;
             $html .= $this->getSelectForTaxonomy($taxonomy, $level, $categoryId);
@@ -121,24 +112,21 @@ class   Flagbit_MEP_Helper_Categories extends Mage_Core_Helper_Abstract
             'options' => $this->getArrayForTaxonomy(0),
             'taxonomyId' => 0
         );
-        if (empty($googleMappingIds))
-        {
+        if (empty($googleMappingIds)) {
             $array[] = $node;
             return $array;
         }
         $taxonomies = explode('|', $googleMappingIds);
         $node['value'] = $taxonomies[0];
         $array[] = $node;
-        foreach ($taxonomies as $taxonomy)
-        {
+        foreach ($taxonomies as $taxonomy) {
             $level++;
             $node = array(
                 'level' => $level,
                 'options' => $this->getArrayForTaxonomy($taxonomy),
                 'taxonomyId' => $taxonomy
             );
-            if (isset($taxonomies[$level - 1]))
-            {
+            if (isset($taxonomies[$level - 1])) {
                 $node['value'] = $taxonomies[$level - 1];
             }
             $array[] = $node;
@@ -150,8 +138,7 @@ class   Flagbit_MEP_Helper_Categories extends Mage_Core_Helper_Abstract
     {
         $options = $this->getOptionsForTaxonomy($taxonomyId);
         $html = '';
-        if (!empty($options))
-        {
+        if (!empty($options)) {
             $html = '<select name="google-mapping[' . $categoryId . '][' . $level . ']" class="taxonomy-select level-' . $level . ' category-' . $categoryId . '"><option value=""></option>' . $options . '</select>';
         }
         return $html;
@@ -167,7 +154,7 @@ class   Flagbit_MEP_Helper_Categories extends Mage_Core_Helper_Abstract
     {
         $language = null;
         $storeId = Mage::registry('category_store_id');
-        if($storeId) {
+        if ($storeId) {
             $language = Mage::helper('mep/storelang')->getLanguageForStoreId($storeId);
         }
 
@@ -178,13 +165,11 @@ class   Flagbit_MEP_Helper_Categories extends Mage_Core_Helper_Abstract
 
     protected function _getTaxonomiesForTaxonomy($taxonomyId, $language = null)
     {
-        if (empty($this->_selects[$taxonomyId]))
-        {
+        if (empty($this->_selects[$taxonomyId])) {
             $taxonomies = Mage::getModel('mep/googleTaxonomies')->getTaxonomiesForParent($taxonomyId, $language);
             $html = '';
             $array = array();
-            foreach ($taxonomies as $taxonomy)
-            {
+            foreach ($taxonomies as $taxonomy) {
                 $html .= '<option value="' . $taxonomy->getTaxonomyId() . '">' . $taxonomy->getName() . '</option>';
                 $array[] = array(
                     'value' => $taxonomy->getTaxonomyId(),
@@ -197,16 +182,13 @@ class   Flagbit_MEP_Helper_Categories extends Mage_Core_Helper_Abstract
         return $this->_selects[$taxonomyId];
     }
 
-    public function    prepareMappingForSave($data)
+    public function prepareMappingForSave($data)
     {
         $mappings = array();
-        if (!empty($data))
-        {
-            foreach ($data as $key => $values)
-            {
+        if (!empty($data)) {
+            foreach ($data as $key => $values) {
                 $values = array_filter($values);
-                if (!empty($values))
-                {
+                if (!empty($values)) {
                     $mappings[] = array(
                         'category_id' => $key,
                         'google_mapping_ids' => implode('|', $values),
@@ -226,8 +208,7 @@ class   Flagbit_MEP_Helper_Categories extends Mage_Core_Helper_Abstract
     public function googleCategoriesAreInitialized()
     {
         $collectionSize = Mage::getModel('mep/googleTaxonomies')->getCollection()->getSize();
-        if ($collectionSize > 0)
-        {
+        if ($collectionSize > 0) {
             return true;
         }
         return false;
@@ -244,7 +225,7 @@ class   Flagbit_MEP_Helper_Categories extends Mage_Core_Helper_Abstract
     {
         $urls = [];
         $storeCollection = Mage::getModel('core/store')->getCollection();
-        foreach($storeCollection as $store) {
+        foreach ($storeCollection as $store) {
             $storelang = Mage::getStoreConfig('general/locale/code', $store->getId());
             $storelangParts = explode('_', $storelang);
             $storeLang = strtolower($storelangParts[0]) . '-' . strtoupper($storelangParts[1]);
@@ -254,7 +235,7 @@ class   Flagbit_MEP_Helper_Categories extends Mage_Core_Helper_Abstract
         return $urls;
     }
 
-    public  function  getLocale()
+    public function getLocale()
     {
         return 'de-DE';
     }

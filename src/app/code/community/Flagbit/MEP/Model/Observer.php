@@ -1,4 +1,5 @@
 <?php
+
 class Flagbit_MEP_Model_Observer extends Varien_Object
 {
     /**
@@ -20,7 +21,7 @@ class Flagbit_MEP_Model_Observer extends Varien_Object
     public function runProfile($profileId)
     {
         $profile = Mage::getModel('mep/profile')->load($profileId);
-        if($profile->getId()){
+        if ($profile->getId()) {
             $this->exportProfile($profile);
         }
     }
@@ -38,9 +39,9 @@ class Flagbit_MEP_Model_Observer extends Varien_Object
         $category = $observer->getCategory();
         $storeId = $observer->getRequest()->getParam('store');
 
-        if(!empty($data) && $category->getId() && $storeId){
+        if (!empty($data) && $category->getId() && $storeId) {
 
-            foreach($data as $id => $value){
+            foreach ($data as $id => $value) {
                 $id = ltrim($id, 'mapping_');
                 $model = Mage::getModel('mep/attribute_mapping')->load($id);
                 $model->load($id);
@@ -49,14 +50,14 @@ class Flagbit_MEP_Model_Observer extends Varien_Object
 
                     $model->setOption(
                         array('value' => array(
-                                $category->getId() => array(
-                                                    $storeId => $value
-                                                      )
-                                        )
+                            $category->getId() => array(
+                                $storeId => $value
                             )
+                        )
+                        )
                     );
                     $model->save();
-                }catch (Exception $e){
+                } catch (Exception $e) {
                     Mage::logException($e);
                 }
             }
@@ -73,11 +74,11 @@ class Flagbit_MEP_Model_Observer extends Varien_Object
     {
         $tabs = $observer->getEvent()->getTabs();
 
-        if($tabs->getCategory()->getStoreId() !== 0){
+        if ($tabs->getCategory()->getStoreId() !== 0) {
             $tabs->addTab(
                 'mep',
                 array(
-                    'label'   => Mage::helper('catalog')->__('MEP Mappings'),
+                    'label' => Mage::helper('catalog')->__('MEP Mappings'),
                     'content' => $tabs->getLayout()->createBlock('mep/adminhtml_category_mapping', '')->toHtml()
                 )
             );
@@ -93,7 +94,7 @@ class Flagbit_MEP_Model_Observer extends Varien_Object
     {
         $exportFile = null;
         $newTempExportFile = null;
-        try{
+        try {
             /** @var $appEmulation Mage_Core_Model_App_Emulation */
             $appEmulation = Mage::getSingleton('core/app_emulation');
             //Start environment emulation of the specified store
@@ -105,15 +106,15 @@ class Flagbit_MEP_Model_Observer extends Varien_Object
             // destination File
             $exportFile = $this->_getExportPath($profile) . DS . $profile->getFilename();
             $newTempExportFile = $exportFile . '.new';
-            if(file_exists($newTempExportFile)){
+            if (file_exists($newTempExportFile)) {
                 unlink($newTempExportFile);
             }
 
             // disable flat Tables
-            Mage::app()->getConfig()->setNode('catalog/frontend/flat_catalog_product',0,true);
+            Mage::app()->getConfig()->setNode('catalog/frontend/flat_catalog_product', 0, true);
 
             // add additional Logfile for the current Profile
-            Mage::helper('mep/log')->addAdditionalLogfile('mep-'.$profile->getId().'.log');
+            Mage::helper('mep/log')->addAdditionalLogfile('mep-' . $profile->getId() . '.log');
 
             /* @var $export Flagbit_MEP_Model_Export */
             $export = Mage::getModel('mep/export');
@@ -124,15 +125,16 @@ class Flagbit_MEP_Model_Observer extends Varien_Object
             $export->setDestination($exportFile);
             $export->export();
 
-            try{ // bypass MySQL server has gone away errors
+            try { // bypass MySQL server has gone away errors
                 $appEmulation->stopEnvironmentEmulation($initialEnvironmentInfo);
-            }catch (Exception $e){}
+            } catch (Exception $e) {
+            }
 
-        }catch (Exception $e){
+        } catch (Exception $e) {
             Mage::helper('mep/log')->err($e, $this);
             Mage::logException($e);
 
-            if(!$catchErrors){
+            if (!$catchErrors) {
                 throw $e;
             }
         }
@@ -163,8 +165,8 @@ class Flagbit_MEP_Model_Observer extends Varien_Object
     {
         $exportDir = Mage::getConfig()->getOptions()->getBaseDir() . DS . $profile->getFilepath();
 
-        if(Mage::getConfig()->getOptions()->createDirIfNotExists($exportDir) === FALSE){
-            Mage::throwException('Export Directory is not writable ('.$exportDir.')');
+        if (Mage::getConfig()->getOptions()->createDirIfNotExists($exportDir) === FALSE) {
+            Mage::throwException('Export Directory is not writable (' . $exportDir . ')');
         }
 
         return $exportDir;

@@ -60,8 +60,7 @@ umask(0);
 try {
     $mepCron = Mage::getModel('mep/cron_execute');
     $mepCron->run();
-}
-catch (Exception $e) {
+} catch (Exception $e) {
     echo $e->getMessage();
     exit(1);
 }

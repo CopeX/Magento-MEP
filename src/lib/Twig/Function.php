@@ -26,8 +26,8 @@ abstract class Twig_Function implements Twig_FunctionInterface, Twig_FunctionCal
     {
         $this->options = array_merge(array(
             'needs_environment' => false,
-            'needs_context'     => false,
-            'callable'          => null,
+            'needs_context' => false,
+            'callable' => null,
         ), $options);
     }
 

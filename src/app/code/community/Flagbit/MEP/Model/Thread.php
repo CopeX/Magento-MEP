@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Implements threading in PHP
  *
@@ -7,9 +8,10 @@
  * @author Tudor Barbu <miau@motane.lu>
  * @copyright MIT
  */
-class Flagbit_MEP_Model_Thread {
-    const FUNCTION_NOT_CALLABLE     = 10;
-    const COULD_NOT_FORK            = 15;
+class Flagbit_MEP_Model_Thread
+{
+    const FUNCTION_NOT_CALLABLE = 10;
+    const COULD_NOT_FORK = 15;
 
     /**
      * possible errors
@@ -17,8 +19,8 @@ class Flagbit_MEP_Model_Thread {
      * @var array
      */
     private $errors = array(
-        self::FUNCTION_NOT_CALLABLE   => 'You must specify a valid function name that can be called from the current scope.',
-        self::COULD_NOT_FORK          => 'pcntl_fork() returned a status of -1. No new process was created',
+        self::FUNCTION_NOT_CALLABLE => 'You must specify a valid function name that can be called from the current scope.',
+        self::COULD_NOT_FORK => 'pcntl_fork() returned a status of -1. No new process was created',
     );
 
     /**
@@ -42,13 +44,14 @@ class Flagbit_MEP_Model_Thread {
      *
      * @return boolean
      */
-    public static function available() {
+    public static function available()
+    {
         $required_functions = array(
             'pcntl_fork',
         );
 
-        foreach( $required_functions as $function ) {
-            if ( !function_exists( $function ) ) {
+        foreach ($required_functions as $function) {
+            if (!function_exists($function)) {
                 return false;
             }
         }
@@ -62,9 +65,10 @@ class Flagbit_MEP_Model_Thread {
      *
      * @param callback $_runnable
      */
-    public function __construct( $_runnable = null ) {
-        if( $_runnable !== null ) {
-            $this->setRunnable( $_runnable );
+    public function __construct($_runnable = null)
+    {
+        if ($_runnable !== null) {
+            $this->setRunnable($_runnable);
         }
     }
 
@@ -74,12 +78,12 @@ class Flagbit_MEP_Model_Thread {
      * @param callback $_runnable
      * @return callback
      */
-    public function setRunnable( $_runnable ) {
-        if( self::runnableOk( $_runnable ) ) {
+    public function setRunnable($_runnable)
+    {
+        if (self::runnableOk($_runnable)) {
             $this->runnable = $_runnable;
-        }
-        else {
-            throw new Exception( $this->getError( self::FUNCTION_NOT_CALLABLE ), self::FUNCTION_NOT_CALLABLE );
+        } else {
+            throw new Exception($this->getError(self::FUNCTION_NOT_CALLABLE), self::FUNCTION_NOT_CALLABLE);
         }
     }
 
@@ -88,7 +92,8 @@ class Flagbit_MEP_Model_Thread {
      *
      * @return callback
      */
-    public function getRunnable() {
+    public function getRunnable()
+    {
         return $this->runnable;
     }
 
@@ -102,9 +107,10 @@ class Flagbit_MEP_Model_Thread {
      * @param callback $_runnable
      * @return boolean
      */
-    public static function runnableOk( $_runnable ) {
+    public static function runnableOk($_runnable)
+    {
         return true;
-        return ( is_callable( $_runnable ) );
+        return (is_callable($_runnable));
     }
 
     /**
@@ -112,7 +118,8 @@ class Flagbit_MEP_Model_Thread {
      *
      * @return int
      */
-    public function getPid() {
+    public function getPid()
+    {
         return $this->pid;
     }
 
@@ -121,9 +128,10 @@ class Flagbit_MEP_Model_Thread {
      *
      * @return boolean
      */
-    public function isAlive() {
-        $pid = pcntl_waitpid( $this->pid, $status, WNOHANG );
-        return ( $pid === 0 );
+    public function isAlive()
+    {
+        $pid = pcntl_waitpid($this->pid, $status, WNOHANG);
+        return ($pid === 0);
 
     }
 
@@ -133,27 +141,26 @@ class Flagbit_MEP_Model_Thread {
      *
      * @return void
      */
-    public function start() {
+    public function start()
+    {
         $pid = @ pcntl_fork();
-        if( $pid == -1 ) {
-            throw new Exception( $this->getError( self::COULD_NOT_FORK ), self::COULD_NOT_FORK );
+        if ($pid == -1) {
+            throw new Exception($this->getError(self::COULD_NOT_FORK), self::COULD_NOT_FORK);
         }
-        if( $pid ) {
+        if ($pid) {
             // parent
             $this->pid = $pid;
-        }
-        else {
+        } else {
             // child
-            pcntl_signal( SIGTERM, array( $this, 'signalHandler' ) );
+            pcntl_signal(SIGTERM, array($this, 'signalHandler'));
             $arguments = func_get_args();
-            if ( !empty( $arguments ) ) {
-                call_user_func_array( $this->runnable, $arguments );
-            }
-            else {
-                call_user_func( $this->runnable );
+            if (!empty($arguments)) {
+                call_user_func_array($this->runnable, $arguments);
+            } else {
+                call_user_func($this->runnable);
             }
 
-            exit( 0 );
+            exit(0);
         }
     }
 
@@ -164,11 +171,12 @@ class Flagbit_MEP_Model_Thread {
      * @param integer $_signal - SIGKILL/SIGTERM
      * @param boolean $_wait
      */
-    public function stop( $_signal = SIGKILL, $_wait = false ) {
-        if( $this->isAlive() ) {
-            posix_kill( $this->pid, $_signal );
-            if( $_wait ) {
-                pcntl_waitpid( $this->pid, $status = 0 );
+    public function stop($_signal = SIGKILL, $_wait = false)
+    {
+        if ($this->isAlive()) {
+            posix_kill($this->pid, $_signal);
+            if ($_wait) {
+                pcntl_waitpid($this->pid, $status = 0);
             }
         }
     }
@@ -178,8 +186,9 @@ class Flagbit_MEP_Model_Thread {
      *
      * @return boolean
      */
-    public function kill( $_signal = SIGKILL, $_wait = false ) {
-        return $this->stop( $_signal, $_wait );
+    public function kill($_signal = SIGKILL, $_wait = false)
+    {
+        return $this->stop($_signal, $_wait);
     }
 
     /**
@@ -189,11 +198,11 @@ class Flagbit_MEP_Model_Thread {
      * @param integer $_code
      * @return string
      */
-    public function getError( $_code ) {
-        if ( isset( $this->errors[$_code] ) ) {
+    public function getError($_code)
+    {
+        if (isset($this->errors[$_code])) {
             return $this->errors[$_code];
-        }
-        else {
+        } else {
             return 'No such error code ' . $_code . '! Quit inventing errors!!!';
         }
     }
@@ -203,11 +212,12 @@ class Flagbit_MEP_Model_Thread {
      *
      * @param integer $_signal
      */
-    protected function signalHandler( $_signal ) {
-        switch( $_signal ) {
+    protected function signalHandler($_signal)
+    {
+        switch ($_signal) {
             case SIGTERM:
-                exit( 0 );
-            break;
+                exit(0);
+                break;
         }
     }
 }

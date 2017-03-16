@@ -1,4 +1,5 @@
 <?php
+
 class Flagbit_MEP_Adminhtml_Shipping_AttributeController extends Mage_Adminhtml_Controller_Action
 {
 
