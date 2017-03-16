@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Created by PhpStorm.
  * User: prog
@@ -8,6 +9,7 @@
 ?>
 <script>
     var GoogleMapping = Class.create();
+
     GoogleMapping.prototype = {
         initialize: function () {
             var instance = this;
@@ -17,20 +19,25 @@
             this.currentCategory = null;
             this.currentTaxonomy = null;
             this.currentLevel = null;
+
             this.options.storeSelector = $('store_selection_select');
             this.options.categoriesBlock = $('categories_list');
             this.options.languageSelector = $('mep_store_language');
+
             <?php if(count(Mage::app()->getStores()) == 1):?>
             this.options.storeId = <?php echo Mage::app()->getStores()[1]->getStoreId();?>;
             <?php else:?>
             this.options.storeId = this.options.storeSelector.value;
             <?php endif;?>
+
             this.options.selectClass = '.taxonomy-select';
+
             if (this.options.storeSelector !== null) {
                 this.options.storeSelector.observe('change', function () {
                     instance.options.storeId = instance.options.storeSelector.value;
                     instance.load();
                 });
+
             }
         },
         load: function () {
@@ -45,6 +52,7 @@
                     instance.bindSelect();
                 }
             });
+
             new Ajax.Request(this.options.requestUrl.loadlanguage + '?store_id=' + this.options.storeId, {
                 method: 'get',
                 parameters: {
@@ -55,6 +63,7 @@
                     instance.bindSelect();
                 }
             });
+
         },
         parseJsonLanguage: function (text) {
             var data = JSON.parse(text);
@@ -100,6 +109,7 @@
                 this.bindSelect();
                 return;
             }
+
             new Ajax.Request(this.options.requestUrl.loadtaxonomies + '?taxonomy_id=' + taxonomyId, {
                 method: 'get',
                 onSuccess: function (transport) {
