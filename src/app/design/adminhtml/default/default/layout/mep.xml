@@ -9,28 +9,6 @@
 
     <adminhtml_profile_edit>
         <reference name="head">
-            <action method="setCanLoadTinyMce">
-                <flag>1</flag>
-            </action>
-            <!-- JS-Files addItem without group -->
-            <action method="addItem">
-                <type>js</type>
-                <script>mage/adminhtml/rules.js</script>
-                <params/>
-            </action>
-            <action method="addItem">
-                <type>js</type>
-                <script>prototype/window.js</script>
-            </action>
-            <action method="addItem">
-                <type>js</type>
-                <script>tablekit/tablekit.js</script>
-            </action>
-            <!-- JS-File addJs -->
-            <action method="addJs">
-                <script>mage/adminhtml/wysiwyg/widget.js</script>
-            </action>
-            <!-- JS-Files addItem with group mep -->
             <action method="addItem">
                 <type>skin_js</type>
                 <script>jquery.min.js</script>
@@ -47,29 +25,9 @@
                 <params>group="mep"</params>
             </action>
             <action method="addItem">
-                <type>skin_js</type>
-                <script>highlighttextarea/jquery.highlighttextarea.min.js</script>
-                <params>group="mep"</params>
-            </action>
-            <!-- JS-Files addItem with group mep2 -->
-            <action method="addItem">
-                <type>skin_js</type>
-                <script>jqueryui/jquery-ui.min.js</script>
-                <params>group="mep2"</params>
-            </action>
-            <!-- CSS-Files -->
-            <action method="addItem">
-                <type>js_css</type>
-                <script>prototype/windows/themes/default.css</script>
-            </action>
-            <action method="addCss">
-                <name>lib/prototype/windows/themes/magento.css</name>
-            </action>
-            <action method="addCss">
-                <name>jqueryui/jquery-ui.min.css</name>
-            </action>
-            <action method="addCss">
-                <name>highlighttextarea/jquery.highlighttextarea.min.css</name>
+                <type>js</type>
+                <script>mage/adminhtml/rules.js</script>
+                <params/>
             </action>
             <action method="addCss">
                 <name>chosen/chosen.css</name>
@@ -79,6 +37,41 @@
             </action>
             <action method="addCss">
                 <name>tablekit.css</name>
+            </action>
+            <action method="addJs">
+                <script>mage/adminhtml/wysiwyg/widget.js</script>
+            </action>
+            <action method="addItem">
+                <type>js</type>
+                <script>prototype/window.js</script>
+            </action>
+            <action method="addItem">
+                <type>js</type>
+                <script>tablekit/tablekit.js</script>
+            </action>
+            <action method="addItem">
+                <type>js_css</type>
+                <script>prototype/windows/themes/default.css</script>
+            </action>
+            <action method="addCss">
+                <name>lib/prototype/windows/themes/magento.css</name>
+            </action>
+
+            <action method="addItem">
+                <type>skin_js</type>
+                <script>highlighttextarea/jquery.highlighttextarea.min.js</script>
+                <params>group="mep"</params>
+            </action>
+            <action method="addCss">
+                <name>highlighttextarea/jquery.highlighttextarea.min.css</name>
+            </action>
+            <action method="addItem">
+                <type>skin_js</type>
+                <script>jqueryui/jquery-ui.min.js</script>
+                <params>group="mep"</params>
+            </action>
+            <action method="addCss">
+                <name>jqueryui/jquery-ui.min.css</name>
             </action>
         </reference>
     </adminhtml_profile_edit>
@@ -258,9 +251,9 @@
                 <name>mep.css</name>
             </action>
             <!--   <action method="addItem">
-                   <type>js</type>
-                   <name>mep/google_mapping.js</name>
-               </action> -->
+                 <type>js</type>
+                 <name>mep/google_mapping.js</name>
+             </action> -->
             <action method="addItem">
                 <type>js</type>
                 <name>mep/google_categories_import.js</name>

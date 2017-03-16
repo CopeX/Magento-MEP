@@ -3,9 +3,10 @@
 class Flagbit_MEP_Block_Adminhtml_Google_View_Edit_Form extends Mage_Adminhtml_Block_Widget_Form
 {
 
-    protected function _prepareForm()
+    protected function  _prepareForm()
     {
-        if (!Mage::helper('mep/categories')->googleCategoriesAreInitialized()) {
+        if (!Mage::helper('mep/categories')->googleCategoriesAreInitialized())
+        {
             $form = new Varien_Data_Form(array());
 
             $formUpload = $form->addFieldset('file_selection',
@@ -13,30 +14,44 @@ class Flagbit_MEP_Block_Adminhtml_Google_View_Edit_Form extends Mage_Adminhtml_B
                     'legend' => Mage::helper('mep')->__('Google Categories CSV')
                 ));
 
-            $formUpload->addField('launch', 'button',
-                array(
-                    'label' => Mage::helper('mep')->__('Google categories initialisation'),
-                    'value' => Mage::helper('mep')->__('Start'),
-                    'name' => 'launch',
-                    'class' => 'form-button',
-                    'onclick' => 'startGoogleCategoriesImport('
-                        . '\'' . Mage::helper('adminhtml')->getUrl('/google/importcategoriesmultistore') . '\');',
-                ));
+            if (Mage::app()->isSingleStoreMode()) {
+                $formUpload->addField('launch', 'button',
+                    array(
+                        'label' => Mage::helper('mep')->__('Google categories initialisation'),
+                        'value' => Mage::helper('mep')->__('Start'),
+                        'name' => 'launch',
+                        'class' => 'form-button',
+                        'onclick' => 'startGoogleCategoriesImport(\'' . Mage::helper('adminhtml')->getUrl('adminhtml/google/importcategories') . '\');',
+                    ));
+            } else {
+                $formUpload->addField('launch', 'button',
+                    array(
+                        'label' => Mage::helper('mep')->__('Google categories initialisation'),
+                        'value' => Mage::helper('mep')->__('Start'),
+                        'name' => 'launch',
+                        'class' => 'form-button',
+                        'onclick' => 'startGoogleCategoriesImport('
+                            . '\'' . Mage::helper('adminhtml')->getUrl('adminhtml/google/importcategoriesmultistore') . '\');',
+                    ));
 
-        } else {
+            }
+        }
+        else
+        {
             $form = new Varien_Data_Form(array(
                 'id' => 'edit_form',
                 'action' => $this->getUrl('*/*/save'),
                 'method' => 'post',
             ));
 
+
             if (!Mage::app()->isSingleStoreMode()) {
+
 
                 $storeSelection = $form->addFieldset('store_selection',
                     array(
                         'legend' => Mage::helper('mep')->__('Select a store')
                     ));
-
 
                 $storeSelection->addField('store_selection_select', 'select',
                     array(
@@ -44,7 +59,7 @@ class Flagbit_MEP_Block_Adminhtml_Google_View_Edit_Form extends Mage_Adminhtml_B
                         'class' => 'required-entry',
                         'required' => true,
                         'name' => 'store_id',
-                        'values' => Mage::getSingleton('adminhtml/system_store')->getStoreValuesForForm(false, false),
+                        'values'    => Mage::getSingleton('adminhtml/system_store')->getStoreValuesForForm(false, false),
                     )
                 );
 
@@ -56,13 +71,13 @@ class Flagbit_MEP_Block_Adminhtml_Google_View_Edit_Form extends Mage_Adminhtml_B
                         'class' => 'required-entry',
                         'required' => true,
                         'name' => 'mep_store_language',
-                        'values' => Mage::helper('mep/storelang')->getLanguagesForForm(),
+                        'values'    => Mage::helper('mep/storelang')->getLanguagesForForm(),
                         'after_element_html' => $afterElementHtml,
                     )
                 );
 
                 $storeId = Mage::registry('category_store_id');
-                if ($storeId) {
+                if($storeId) {
                     $form->setValues([
                         'store_selection_select' => $storeId,
                         'mep_store_language' => Mage::helper('mep/storelang')->getLanguageForStoreId($storeId),
@@ -76,24 +91,20 @@ class Flagbit_MEP_Block_Adminhtml_Google_View_Edit_Form extends Mage_Adminhtml_B
                         'legend' => Mage::helper('mep')->__('Your selected store')
                     ));
 
-                //Add a Label for the Store if there is only one store view
-                $storeSelection->addField('store_name_label_field', 'label', array(
-                    'name' => 'store_name',
-                    'value' => Mage::app()->getStore(true)->getName(),
-                ));
-
                 $storeSelection->addField('store_id', 'hidden', array(
                     'name' => 'store_id',
-                    'value' => Mage::app()->getStore(true)->getId(),
+                    'value' => Mage::app()->getStore(true)->getId()
                 ));
 
-                $storeId = Mage::registry('store_id');
+                $storeSelection->addField("store_label","label",array(
+                    'name' => 'store_label',
+                    'value' => Mage::app()->getStore(true)->getName()
+                ));
 
-                if ($storeId) {
+                $storeId = Mage::register('store_id');
+                if($storeId) {
                     $form->setValues(['store_id' => $storeId]);
                 }
-
-
             }
 
             $categories = $form->addFieldset('categories', array(
