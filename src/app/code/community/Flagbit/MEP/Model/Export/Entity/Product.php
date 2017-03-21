@@ -1177,8 +1177,8 @@ class Flagbit_MEP_Model_Export_Entity_Product extends Mage_ImportExport_Model_Ex
     protected function _initGoogleMapping($store_id)
     {
         $mappings = Mage::getResourceModel('mep/googleMapping_collection');
-        $taxonomyIds = array()
-            ->addFieldToFilter('store_id', $store_id);
+	->addFieldToFilter('store_id', $store_id);
+	$taxonomyIds = array();
         foreach ($mappings as $mapping) {
             $mappingIds = explode('|', $mapping->getGoogleMappingIds());
             $mapping->setMappingIds($mappingIds);
