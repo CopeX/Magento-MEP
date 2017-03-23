@@ -59,3 +59,9 @@ The source code is available, so feel free to jump in and contribute!
 
 
 [![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/Flagbit/magento-mep/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
+
+##Cron has to be set by server not by magento
+The cronconfiguration does not work with aoe_scheduler
+
+    * */1 * * {path to htdocs}/mep-cron.php
+
