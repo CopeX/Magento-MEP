@@ -91,22 +91,24 @@ class Flagbit_MEP_Model_Export_Entity_Product extends Mage_ImportExport_Model_Ex
      */
     protected function _initCategories()
     {
-        $collection = Mage::getResourceModel('catalog/category_collection')->addNameToResult();
+        $obj_profile = $this->getProfile();
+        $rootCategoryId = Mage::app()->getStore($this->getProfile()->getStoreId())->getRootCategoryId();
+        $collection = Mage::getResourceModel('catalog/category_collection')->addNameToResult()->addIsActiveFilter()->setStoreId($obj_profile->getStoreId());
         /* @var $collection Mage_Catalog_Model_Resource_Eav_Mysql4_Category_Collection */
         foreach ($collection as $category) {
             $structure = preg_split('#/+#', $category->getPath());
             $pathSize = count($structure);
-            if ($pathSize > 1) {
+            if ($pathSize > 1 && $structure[1] == $rootCategoryId) {
                 $path = array();
                 $pathIds = array();
                 for ($i = 1; $i < $pathSize; $i++) {
-                    if(is_a($collection->getItemById($structure[$i]),'Mage_Catalog_Model_Category')){
+                    if (is_a($collection->getItemById($structure[$i]), 'Mage_Catalog_Model_Category')) {
                         $path[] = $collection->getItemById($structure[$i])->getName();
                         $pathIds[] = $structure[$i];
                     }
                 }
                 $this->_rootCategories[$category->getId()] = array_shift($path);
-                if ($pathSize > 2) {
+                if ($pathSize > 2 ) {
                     $this->_categories[$category->getId()] = implode($this->getProfile()->getCategoryDelimiter(), $path);
                     $this->_categoryIds[$category->getId()] = $pathIds;
                 }
