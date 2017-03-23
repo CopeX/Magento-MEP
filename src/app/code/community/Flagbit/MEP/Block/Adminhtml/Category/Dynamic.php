@@ -20,6 +20,7 @@
  * @version   1.0.0
  * @since     0.1.0
  */
+
 /**
  * Condition block for category edit page
  *
@@ -107,34 +108,34 @@ class Flagbit_MEP_Block_Adminhtml_Category_Dynamic
 
         $specialRules->addType('apply', 'Mage_Adminhtml_Block_Catalog_Product_Helper_Form_Apply');
         $specialRules->addField('apply_to', 'apply', array(
-            'name'        => 'settings[apply_to][]',
-            'label'       => Mage::helper('catalog')->__('Apply To'),
-            'values'      => Mage_Catalog_Model_Product_Type::getOptions(),
+            'name' => 'settings[apply_to][]',
+            'label' => Mage::helper('catalog')->__('Apply To'),
+            'values' => Mage_Catalog_Model_Product_Type::getOptions(),
             'mode_labels' => array(
-                'all'     => Mage::helper('catalog')->__('All Product Types'),
-                'custom'  => Mage::helper('catalog')->__('Selected Product Types')
+                'all' => Mage::helper('catalog')->__('All Product Types'),
+                'custom' => Mage::helper('catalog')->__('Selected Product Types')
             ),
-            'required'    => true,
+            'required' => true,
         ), 'frontend_class');
         $form->getElement('apply_to')->setValue($this->getApplyToValue($form));
 
         $specialRules->addField('is_in_stock', 'select', array(
-            'name'  => 'settings[is_in_stock]',
+            'name' => 'settings[is_in_stock]',
             'label' => Mage::helper('catalog')->__('Stock Availability'),
-            'values' =>  array_merge(Mage::getSingleton('cataloginventory/source_stock')->toOptionArray(), array('2' => '')),
+            'values' => array_merge(Mage::getSingleton('cataloginventory/source_stock')->toOptionArray(), array('2' => '')),
             'value' => $this->getProfilSettingsValueForKey('is_in_stock'),
-            'note'  => $this->__('Will be used for mains and inheritors products'),
+            'note' => $this->__('Will be used for mains and inheritors products'),
         ));
 
         $specialRules->addType('qty', 'Flagbit_MEP_Helper_QtyFilter');
         $specialRules->addField('qty', 'qty', array(
-            'name'  => 'settings[qty][threshold]',
+            'name' => 'settings[qty][threshold]',
             'dropdownName' => 'settings[qty][operator]',
             'dropdownStyle' => 'width: 150px',
             'dropdownValue' => $this->getQtyOperatorValue(),
             'label' => Mage::helper('catalog')->__('Qty'),
             'style' => 'width:50px',
-            'note'  => $this->__('Will be used for mains and inheritors products'),
+            'note' => $this->__('Will be used for mains and inheritors products'),
             'required' => true
         ));
         $form->getElement('qty')->setValue($this->getQtyFilterValue($form));
@@ -151,7 +152,8 @@ class Flagbit_MEP_Block_Adminhtml_Category_Dynamic
         return $this;
     }
 
-    protected function  getProfilSettingsValueForKey($key) {
+    protected function getProfilSettingsValueForKey($key)
+    {
         $profilData = Mage::helper('mep')->getCurrentProfileData();
         $settings = $profilData['settings'];
         if (isset($settings[$key]) && ($value = $settings[$key]) !== false) {
@@ -160,32 +162,33 @@ class Flagbit_MEP_Block_Adminhtml_Category_Dynamic
         return '';
     }
 
-    protected function  getApplyToValue(&$form) {
+    protected function getApplyToValue(&$form)
+    {
         $profilData = Mage::helper('mep')->getCurrentProfileData();
         $settings = $profilData['settings'];
         if (isset($settings['apply_to']) && ($product_type = $settings['apply_to'])) {
             $product_type = is_array($product_type) ? $product_type : explode(',', $product_type);
             return $product_type;
-        }
-        else {
+        } else {
             $form->getElement('apply_to')->addClass('no-display ignore-validate');
         }
         return null;
     }
 
-    protected function  getQtyFilterValue(&$form) {
+    protected function getQtyFilterValue(&$form)
+    {
         $profilData = Mage::helper('mep')->getCurrentProfileData();
         $settings = $profilData['settings'];
         if (isset($settings['qty']) && isset($settings['qty']['threshold']) && strlen($settings['qty']['threshold'])) {
             return $settings['qty']['threshold'];
-        }
-        else {
+        } else {
             $form->getElement('qty')->addClass('no-display ignore-validate');
         }
         return null;
     }
 
-    protected function  getQtyOperatorValue() {
+    protected function getQtyOperatorValue()
+    {
         $profilData = Mage::helper('mep')->getCurrentProfileData();
         $settings = $profilData['settings'];
         if (isset($settings['qty']) && isset($settings['qty']['operator']) && ($operator = $settings['qty']['operator'])) {

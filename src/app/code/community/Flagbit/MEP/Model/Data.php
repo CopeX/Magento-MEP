@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Helper
  *
@@ -10,7 +11,6 @@
  * @version 0.1.0
  * @since 0.1.0
  */
-
 class Flagbit_MEP_Model_Data extends Mage_Catalog_Model_Convert_Parser_Product
 {
     protected $_externalFields = array();
@@ -58,7 +58,7 @@ class Flagbit_MEP_Model_Data extends Mage_Catalog_Model_Convert_Parser_Product
         $attributes['_options'] = 'options';
 
         //Adding special attribute from DerModProd
-        if(Mage::helper('core')->isModuleEnabled('DerModPro_BasePrice')) {
+        if (Mage::helper('core')->isModuleEnabled('DerModPro_BasePrice')) {
             $attributes['base_price_amount'] = 'base_price_amount';
             $attributes['base_price_unit'] = 'base_price_unit';
             $attributes['base_price_base_amount'] = 'base_price_base_amount';
@@ -69,7 +69,7 @@ class Flagbit_MEP_Model_Data extends Mage_Catalog_Model_Convert_Parser_Product
 
         // add attribute mapping attributes
         $attributeMappingCollection = Mage::getResourceModel('mep/attribute_mapping_collection')->load();
-        foreach($attributeMappingCollection as $attributeMapping){
+        foreach ($attributeMappingCollection as $attributeMapping) {
             $attributes[$attributeMapping->getAttributeCode()] = sprintf('%s (%s)', $attributeMapping->getName(), $attributeMapping->getAttributeCode());
         }
 
@@ -79,7 +79,7 @@ class Flagbit_MEP_Model_Data extends Mage_Catalog_Model_Convert_Parser_Product
             $collection = Mage::getModel('mep/shipping_attribute')->getCollection()
                 ->addFieldToFilter('profile_id', array('eq' => $shipping_id));
             foreach ($collection as $item) {
-                $attributes[$item->getAttributeCode()] = sprintf('%s (%s + %s)',$item->getAttributeCode(), $item->getShippingMethod(), $item->getPaymentMethod());
+                $attributes[$item->getAttributeCode()] = sprintf('%s (%s + %s)', $item->getAttributeCode(), $item->getShippingMethod(), $item->getPaymentMethod());
             }
         }
 

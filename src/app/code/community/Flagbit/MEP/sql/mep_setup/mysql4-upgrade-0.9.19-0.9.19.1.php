@@ -24,18 +24,6 @@ $installer = $this;
 $installer->startSetup();
 
 $installer->run("
-ALTER TABLE `{$this->getTable('mep/google_mapping')}` ADD COLUMN `store_id` int;
-");
-
-$installer->run("
-ALTER TABLE `{$this->getTable('mep/google_mapping')}` drop index category_id;
-");
-
-$installer->run("
-ALTER TABLE `{$this->getTable('mep/google_mapping')}` add unique `category_store_unq_idx` (category_id, store_id);
-");
-
-$installer->run("
 CREATE TABLE `mep_google_store_language` (
   `store_id` int(11) NOT NULL,
   `language` char(8) NOT NULL,

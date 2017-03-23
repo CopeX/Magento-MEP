@@ -126,18 +126,19 @@ class Flagbit_MEP_Adminhtml_ProfileController extends Mage_Adminhtml_Controller_
 
                 Mage::getSingleton('adminhtml/session')->setFormData(false);
 
-                if($this->getRequest()->getParam('duplicate')) {
+                if ($this->getRequest()->getParam('duplicate')) {
                     $newProfile = $model->duplicate();
                     $this->_recalculateProducts($newProfile);
                     Mage::getSingleton('adminhtml/session')->setMepProfileData($newProfile->getData());
                     Mage::getSingleton('adminhtml/session')->addSuccess(Mage::helper('mep')->__('Profile was successfully cloned'));
                     $this->_redirect('*/*/edit', array('id' => $newProfile->getId(), 'tab' => 'form_section'));
 
-                }elseif ($this->getRequest()->getParam('back')) {
+                } elseif ($this->getRequest()->getParam('back')) {
                     $this->_recalculateProducts($model);
                     Mage::getSingleton('adminhtml/session')->addSuccess(Mage::helper('mep')->__('Profile was successfully saved')
                         . '. ' . Mage::helper('mep')->__('Products count: ') . $model->getProductCount());
-                    $this->_redirect('*/*/edit', array('id' => $model->getId(), 'tab' => $this->getRequest()->getParam('tab')));
+                    $this->_redirect('*/*/edit', array('id' => $model->getId(),
+                                                       'tab' => $this->getRequest()->getParam('tab')));
 
                 } else {
                     $this->_recalculateProducts($model);
@@ -174,7 +175,8 @@ class Flagbit_MEP_Adminhtml_ProfileController extends Mage_Adminhtml_Controller_
      *
      * @return void
      */
-    private function _recalculateProducts($profile) {
+    private function _recalculateProducts($profile)
+    {
         $export = Mage::getModel('mep/export');
         $export->setData('id', $profile->getId());
         $export->setEntity("catalog_product");
@@ -256,7 +258,7 @@ class Flagbit_MEP_Adminhtml_ProfileController extends Mage_Adminhtml_Controller_
         } catch (Exception $e) {
             Mage::logException($e);
             $this->_getSession()->addError($this->__('No valid data sent'));
-            if(Mage::getIsDeveloperMode()){
+            if (Mage::getIsDeveloperMode()) {
                 throw $e;
             }
         }
@@ -266,7 +268,7 @@ class Flagbit_MEP_Adminhtml_ProfileController extends Mage_Adminhtml_Controller_
     public function runAction()
     {
         try {
-            $id = (int) $this->getRequest()->getParam('id');
+            $id = (int)$this->getRequest()->getParam('id');
 
             $scheduleAheadFor = Mage::getStoreConfig(Mage_Cron_Model_Observer::XML_PATH_SCHEDULE_AHEAD_FOR) * 60;
             $schedule = Mage::getModel('mep/cron');
@@ -281,8 +283,7 @@ class Flagbit_MEP_Adminhtml_ProfileController extends Mage_Adminhtml_Controller_
             $schedule->setCronExpr('* * * * *')
                 ->setStatus(Mage_Cron_Model_Schedule::STATUS_PENDING)
                 ->setProfileId($id)
-                ->setIgnoreProfileStatus(1)
-            ;
+                ->setIgnoreProfileStatus(1);
 
             $_errorMsg = null;
             for ($time = $now; $time < $timeAhead; $time += 60) {
@@ -295,9 +296,9 @@ class Flagbit_MEP_Adminhtml_ProfileController extends Mage_Adminhtml_Controller_
                 $schedule->unsScheduleId()->save();
                 break;
             }
-            if($_errorMsg !== NULL){
+            if ($_errorMsg !== NULL) {
                 $this->_getSession()->addError($_errorMsg);
-            }else{
+            } else {
                 $this->_getSession()->addSuccess(
                     Mage::helper('mep')->__('Export is scheduled and will run in %s seconds.', $now - time())
                 );

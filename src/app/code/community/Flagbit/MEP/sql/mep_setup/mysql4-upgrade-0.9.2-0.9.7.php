@@ -14,7 +14,7 @@
  *
  * @category Flagbit_MEP
  * @package Flagbit_MEP
- * @author Damian Luszczymak <damian.luszczymak@flagbit.de>
+ * @author Kyrylo Kostiukov <kyrylo.kostiukov@flagbit.de>
  * @copyright 2012 Flagbit GmbH & Co. KG (http://www.flagbit.de). All rights served.
  * @license http://opensource.org/licenses/gpl-3.0 GNU General Public License, version 3 (GPLv3)
  * @version 0.1.0
@@ -24,9 +24,7 @@ $installer = $this;
 $installer->startSetup();
 
 $installer->run("
-ALTER TABLE {$this->getTable('mep_profile')}
-    ADD `store_id` int NOT NULL,
-COMMENT='';
+ALTER TABLE `{$this->getTable('mep/profile')}` ADD COLUMN `media_gallery_delimiter` varchar(15) DEFAULT ';' AFTER `category_delimiter`;
 ");
-$installer->endSetup();
 
+$installer->endSetup();

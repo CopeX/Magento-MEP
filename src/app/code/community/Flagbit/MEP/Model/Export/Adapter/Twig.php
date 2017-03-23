@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This file is part of the Flagbit MEP project.
  *
@@ -92,7 +93,7 @@ class Flagbit_MEP_Model_Export_Adapter_Twig extends Mage_ImportExport_Model_Expo
     public function getContents()
     {
         $result = $this->_twig->render('footer', array_combine(array_keys($this->_headerCols), array_keys($this->_headerCols)));
-        fwrite($this->_fileHandler, trim($result).PHP_EOL);
+        fwrite($this->_fileHandler, trim($result) . PHP_EOL);
         return file_get_contents($this->_destination);
     }
 
@@ -151,11 +152,13 @@ class Flagbit_MEP_Model_Export_Adapter_Twig extends Mage_ImportExport_Model_Expo
         return $this;
     }
 
-    public function setConfigurableDelimiter($delimiter) {
+    public function setConfigurableDelimiter($delimiter)
+    {
         $this->_configurable_delimiter = $delimiter;
     }
 
-    public function getConfigurableDelimiter() {
+    public function getConfigurableDelimiter()
+    {
         return $this->_configurable_delimiter;
     }
 
@@ -171,7 +174,8 @@ class Flagbit_MEP_Model_Export_Adapter_Twig extends Mage_ImportExport_Model_Expo
         return $this;
     }
 
-    public function setEncoding($encoding) {
+    public function setEncoding($encoding)
+    {
         $this->_encoding = $encoding;
     }
 
@@ -209,10 +213,10 @@ class Flagbit_MEP_Model_Export_Adapter_Twig extends Mage_ImportExport_Model_Expo
         $result = Mage::helper('mep/encoding')->fixUTF8($result);
 
         if (!empty($this->_encoding) && $this->_encoding != 'UTF-8') {
-            $result = iconv ( "UTF-8", $this->_encoding, $result );
+            $result = iconv("UTF-8", $this->_encoding, $result);
         }
 
-        fwrite($this->_fileHandler, trim($result).PHP_EOL);
+        fwrite($this->_fileHandler, trim($result) . PHP_EOL);
         return $this;
     }
 
@@ -234,7 +238,7 @@ class Flagbit_MEP_Model_Export_Adapter_Twig extends Mage_ImportExport_Model_Expo
             }
 
             $result = $this->_twig->render('header', array_combine(array_keys($this->_headerCols), array_keys($this->_headerCols)));
-            fwrite($this->_fileHandler, trim($result).PHP_EOL);
+            fwrite($this->_fileHandler, trim($result) . PHP_EOL);
         }
         return $this;
     }
@@ -253,7 +257,7 @@ class Flagbit_MEP_Model_Export_Adapter_Twig extends Mage_ImportExport_Model_Expo
             }
             return $element;
         }
-        if(substr($element,0,2) == 'a:') {
+        if (substr($element, 0, 2) == 'a:') {
             return $element;
         }
         $element = Mage::helper('mep/encoding')->decodeEntities($element);

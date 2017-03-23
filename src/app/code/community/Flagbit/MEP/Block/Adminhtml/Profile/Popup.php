@@ -25,7 +25,7 @@ class Flagbit_MEP_Block_Adminhtml_Profile_Popup
         $this->setChild('save_button',
             $this->getLayout()->createBlock('adminhtml/widget_button')
                 ->setData(array(
-                    'type'  => 'submit',
+                    'type' => 'submit',
                     'value' => 'Submit',
                     'class' => 'save',
                     'title' => 'Submit',
@@ -52,15 +52,17 @@ class Flagbit_MEP_Block_Adminhtml_Profile_Popup
     public function getIsSelectedAttribute($attributeCode)
     {
         $result = false;
-        if( !in_array($attributeCode, $this->_selectAttributeCodes)
-            && in_array($attributeCode, $this->getMapping()->getAttributeCodeAsArray())){
+        if (!in_array($attributeCode, $this->_selectAttributeCodes)
+            && in_array($attributeCode, $this->getMapping()->getAttributeCodeAsArray())
+        ) {
             $this->_selectAttributeCodes[] = $attributeCode;
             $result = true;
         }
         return $result;
     }
 
-    public function getImageUrlType() {
+    public function getImageUrlType()
+    {
         if ($this->getMapping()->getAttributeCode() == 'image_url') {
             return $this->getMapping()->getOption('image_url_type');
         }
@@ -72,7 +74,8 @@ class Flagbit_MEP_Block_Adminhtml_Profile_Popup
      *
      * @return string
      */
-    public function getSaveButtonHtml() {
+    public function getSaveButtonHtml()
+    {
         return $this->getChildHtml('save_button');
     }
 }

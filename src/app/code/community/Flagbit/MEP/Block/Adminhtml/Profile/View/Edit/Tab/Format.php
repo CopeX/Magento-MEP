@@ -1,4 +1,5 @@
 <?php
+
 class Flagbit_MEP_Block_Adminhtml_Profile_View_Edit_Tab_Format extends Mage_Adminhtml_Block_Widget_Form
 {
     /**
@@ -196,13 +197,11 @@ class Flagbit_MEP_Block_Adminhtml_Profile_View_Edit_Tab_Format extends Mage_Admi
         );
 
         $collection = Mage::getModel('mep/shipping')->getCollection()->addFieldToFilter('status', 1);
-        foreach($collection as $item) {
+        foreach ($collection as $item) {
             $options[$item->getId()] = $item->getName();
         }
         return $options;
     }
-
-
 
 
 }

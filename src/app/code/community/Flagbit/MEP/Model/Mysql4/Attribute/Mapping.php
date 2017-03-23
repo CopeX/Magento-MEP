@@ -32,7 +32,7 @@ class Flagbit_MEP_Model_Mysql4_Attribute_Mapping extends Mage_Core_Model_Mysql4_
             ->from($this->getTable('eav/attribute'))
             ->where('attribute_code' . '=?', trim($data->getData('attribute_code')));
 
-        if($this->_getWriteAdapter()->fetchRow($select)){
+        if ($this->_getWriteAdapter()->fetchRow($select)) {
             Mage::throwException(Mage::helper('core')->__('There is already a Magento Attribute with the Code "%s".', $data->getData('attribute_code')));
         }
 
@@ -63,23 +63,24 @@ class Flagbit_MEP_Model_Mysql4_Attribute_Mapping extends Mage_Core_Model_Mysql4_
     public function getOptionValue(Mage_Core_Model_Abstract $object, $optionId, $storeId, $removeEmptyValues = true)
     {
         $result = null;
-        if($this->_optionValues === null || !isset($this->_optionValues[$object->getId()])){
+        if ($this->_optionValues === null || !isset($this->_optionValues[$object->getId()])) {
             $conn = $this->getReadConnection();
-            $select = $conn->select()->from($this->getTable('mep/attribute_mapping_option'), array('option_id', 'value'))
-                            ->where('parent_id=?', $object->getId())
-                            ->where('store_id=?', $storeId);
+            $select = $conn->select()->from($this->getTable('mep/attribute_mapping_option'), array('option_id',
+                                                                                                   'value'))
+                ->where('parent_id=?', $object->getId())
+                ->where('store_id=?', $storeId);
             $this->_optionValues[$object->getId()] = $conn->fetchPairs($select);
         }
-        if(is_array($optionId)){
+        if (is_array($optionId)) {
             $result = array();
-            foreach($optionId as $id){
+            foreach ($optionId as $id) {
                 $value = $this->getOptionValue($object, $id, $storeId);
-                if($removeEmptyValues === true && empty($value)){
+                if ($removeEmptyValues === true && empty($value)) {
                     continue;
                 }
                 $result[] = $value;
             }
-        }else{
+        } else {
             $result = empty($this->_optionValues[$object->getId()][$optionId]) ? null : $this->_optionValues[$object->getId()][$optionId];
         }
         return $result;
@@ -95,14 +96,15 @@ class Flagbit_MEP_Model_Mysql4_Attribute_Mapping extends Mage_Core_Model_Mysql4_
     {
         $option = $object->getOption();
         if (is_array($option)) {
-            $adapter            = $this->_getWriteAdapter();
-            $optionTable        = $this->getTable('mep/attribute_mapping_option');
+            $adapter = $this->_getWriteAdapter();
+            $optionTable = $this->getTable('mep/attribute_mapping_option');
 
             $stores = Mage::app()->getStores(false);
             if (isset($option['value'])) {
                 foreach ($option['value'] as $optionId => $values) {
-                    $intOptionId = (int) $optionId;
-                    $adapter->delete($optionTable, array('option_id =?' => $intOptionId, 'parent_id=?' => $object->getId() ));
+                    $intOptionId = (int)$optionId;
+                    $adapter->delete($optionTable, array('option_id =?' => $intOptionId,
+                                                         'parent_id=?' => $object->getId()));
                     foreach ($stores as $store) {
                         if (isset($values[$store->getId()])
                             && (!empty($values[$store->getId()]))
@@ -110,8 +112,8 @@ class Flagbit_MEP_Model_Mysql4_Attribute_Mapping extends Mage_Core_Model_Mysql4_
                             $data = array(
                                 'parent_id' => $object->getId(),
                                 'option_id' => $intOptionId,
-                                'store_id'  => $store->getId(),
-                                'value'     => $values[$store->getId()],
+                                'store_id' => $store->getId(),
+                                'value' => $values[$store->getId()],
                             );
                             $adapter->insert($optionTable, $data);
                         }
@@ -122,7 +124,6 @@ class Flagbit_MEP_Model_Mysql4_Attribute_Mapping extends Mage_Core_Model_Mysql4_
 
         return $this;
     }
-
 
 
 }

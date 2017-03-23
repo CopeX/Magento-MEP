@@ -21,11 +21,11 @@
  */
 class Twig_NodeVisitor_Optimizer implements Twig_NodeVisitorInterface
 {
-    const OPTIMIZE_ALL         = -1;
-    const OPTIMIZE_NONE        = 0;
-    const OPTIMIZE_FOR         = 2;
-    const OPTIMIZE_RAW_FILTER  = 4;
-    const OPTIMIZE_VAR_ACCESS  = 8;
+    const OPTIMIZE_ALL = -1;
+    const OPTIMIZE_NONE = 0;
+    const OPTIMIZE_FOR = 2;
+    const OPTIMIZE_RAW_FILTER = 4;
+    const OPTIMIZE_VAR_ACCESS = 8;
 
     protected $loops = array();
     protected $optimizers;
@@ -127,7 +127,7 @@ class Twig_NodeVisitor_Optimizer implements Twig_NodeVisitorInterface
      *   * "echo $this->render(Parent)Block()" with "$this->display(Parent)Block()"
      *
      * @param Twig_NodeInterface $node A Node
-     * @param Twig_Environment   $env  The current Twig environment
+     * @param Twig_Environment $env The current Twig environment
      */
     protected function optimizePrintNode(Twig_NodeInterface $node, Twig_Environment $env)
     {
@@ -151,7 +151,7 @@ class Twig_NodeVisitor_Optimizer implements Twig_NodeVisitorInterface
      * Removes "raw" filters.
      *
      * @param Twig_NodeInterface $node A Node
-     * @param Twig_Environment   $env  The current Twig environment
+     * @param Twig_Environment $env The current Twig environment
      */
     protected function optimizeRawFilter(Twig_NodeInterface $node, Twig_Environment $env)
     {
@@ -166,7 +166,7 @@ class Twig_NodeVisitor_Optimizer implements Twig_NodeVisitorInterface
      * Optimizes "for" tag by removing the "loop" variable creation whenever possible.
      *
      * @param Twig_NodeInterface $node A Node
-     * @param Twig_Environment   $env  The current Twig environment
+     * @param Twig_Environment $env The current Twig environment
      */
     protected function enterOptimizeFor(Twig_NodeInterface $node, Twig_Environment $env)
     {
@@ -184,28 +184,22 @@ class Twig_NodeVisitor_Optimizer implements Twig_NodeVisitorInterface
         // the loop variable is referenced for the current loop
         elseif ($node instanceof Twig_Node_Expression_Name && 'loop' === $node->getAttribute('name')) {
             $this->addLoopToCurrent();
-        }
-
-        // block reference
+        } // block reference
         elseif ($node instanceof Twig_Node_BlockReference || $node instanceof Twig_Node_Expression_BlockReference) {
             $this->addLoopToCurrent();
-        }
-
-        // include without the only attribute
+        } // include without the only attribute
         elseif ($node instanceof Twig_Node_Include && !$node->getAttribute('only')) {
             $this->addLoopToAll();
-        }
-
-        // the loop variable is referenced via an attribute
+        } // the loop variable is referenced via an attribute
         elseif ($node instanceof Twig_Node_Expression_GetAttr
             && (!$node->getNode('attribute') instanceof Twig_Node_Expression_Constant
                 || 'parent' === $node->getNode('attribute')->getAttribute('value')
-               )
+            )
             && (true === $this->loops[0]->getAttribute('with_loop')
                 || ($node->getNode('node') instanceof Twig_Node_Expression_Name
                     && 'loop' === $node->getNode('node')->getAttribute('name')
-                   )
-               )
+                )
+            )
         ) {
             $this->addLoopToAll();
         }
@@ -215,7 +209,7 @@ class Twig_NodeVisitor_Optimizer implements Twig_NodeVisitorInterface
      * Optimizes "for" tag by removing the "loop" variable creation whenever possible.
      *
      * @param Twig_NodeInterface $node A Node
-     * @param Twig_Environment   $env  The current Twig environment
+     * @param Twig_Environment $env The current Twig environment
      */
     protected function leaveOptimizeFor(Twig_NodeInterface $node, Twig_Environment $env)
     {

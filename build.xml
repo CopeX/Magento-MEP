@@ -45,7 +45,7 @@
         <antform title="SSH-Key Authentification required">
             <label>Please enter your Passphrase for Key ${transfer.keyfile}</label>
             <textProperty label="Passphrase:" property="userPass"
-                          required="true" password="true" />
+                          required="true" password="true"/>
         </antform>
 
         <scp
@@ -54,15 +54,15 @@
                 trust="true"
                 verbose="true"
                 keyfile="${transfer.keyfile}"
-                >
+        >
             <fileset dir="src">
                 <include name="**/*"/>
                 <modified>
                     <param name="cache.cachefile" value="${transfer.cache}.cache.properties"/>
                 </modified>
                 <exclude name="**/.svn"/>
-                <exclude name="**/.sass-cache/**" />
-                <exclude name="**/sass/**" />
+                <exclude name="**/.sass-cache/**"/>
+                <exclude name="**/sass/**"/>
                 <exclude name=".buildpath"/>
                 <exclude name=".project"/>
                 <exclude name=".vagrant"/>
@@ -79,9 +79,9 @@
                 <exclude name="build.properties"/>
                 <exclude name="build.xml"/>
                 <exclude name="TODO"/>
-                <exclude name="var/**" />
-                <exclude name="Thumbs.db" />
-                <exclude name=".modman" />
+                <exclude name="var/**"/>
+                <exclude name="Thumbs.db"/>
+                <exclude name=".modman"/>
             </fileset>
         </scp>
     </target>

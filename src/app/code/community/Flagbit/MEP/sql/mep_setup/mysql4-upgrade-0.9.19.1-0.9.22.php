@@ -23,8 +23,29 @@
 $installer = $this;
 $installer->startSetup();
 
+try {
+
+    $installer->run("
+    ALTER TABLE `{$this->getTable('mep/google_mapping')}` ADD COLUMN `store_id` int;
+    ");
+
+    $installer->run("
+    ALTER TABLE `{$this->getTable('mep/google_mapping')}` drop index category_id;
+    ");
+
+    $installer->run("
+    ALTER TABLE `{$this->getTable('mep/google_mapping')}` add unique `category_store_unq_idx` (category_id, store_id);
+    ");
+
+} catch (Exception $e) {
+    Mage::log('MEP-Installscript to 0.9.22 did not run completly: DB-Table mep/google_mapping is already up to date', null, 'system.log', true);
+}
+
 $installer->run("
-ALTER TABLE `{$this->getTable('mep/profile')}` ADD COLUMN `media_gallery_delimiter` varchar(15) DEFAULT ';' AFTER `category_delimiter`;
-");
+CREATE TABLE IF NOT EXISTS `mep_google_store_language` (
+  `store_id` int(11) NOT NULL,
+  `language` char(8) NOT NULL,
+  PRIMARY KEY (`store_id`)
+);");
 
 $installer->endSetup();

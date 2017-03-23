@@ -20,6 +20,7 @@
  * @version   1.0.0
  * @since     0.2.0
  */
+
 /**
  * Rules for Conditions
  *
@@ -36,9 +37,11 @@ class Flagbit_MEP_Model_Rule extends Mage_CatalogRule_Model_Rule
 
     protected $_profile;
 
-    public function setProfile($profile) {
+    public function setProfile($profile)
+    {
         $this->_profile = $profile;
     }
+
     /**
      * Enter description here ...
      *
@@ -133,16 +136,13 @@ class Flagbit_MEP_Model_Rule extends Mage_CatalogRule_Model_Rule
                 if (isset($settings['apply_to']) && !is_null($settings['apply_to'])) {
                     $productCollection->addAttributeToFilter('type_id', array('in' => $settings['apply_to']));
                 }
-                if (isset($settings['is_in_stock']) && strlen($settings['is_in_stock']))
-                {
+                if (isset($settings['is_in_stock']) && strlen($settings['is_in_stock'])) {
                     $isInStockFilter = intval($settings['is_in_stock']);
                     $isInStockCondition = 'is_in_stock = ' . $isInStockFilter;
-                    if ($isInStockFilter == 1)
-                    {
+                    if ($isInStockFilter == 1) {
                         if (Mage::getStoreConfig('cataloginventory/item_options/manage_stock') == 1) {
                             $isInStockCondition = '(' . $isInStockCondition . ' OR (manage_stock = 0 AND use_config_manage_stock = 0))';
-                        }
-                        else {
+                        } else {
                             $isInStockCondition = '(' . $isInStockCondition . ' OR manage_stock = 0 OR use_config_manage_stock = 1)';
                         }
                     }
@@ -156,12 +156,10 @@ class Flagbit_MEP_Model_Rule extends Mage_CatalogRule_Model_Rule
                         $productCollection->getSelect()->where('qty ' . $operator . ' ?', $threshold);
                     }
                 }
-                if ($this->_profile->getStoreId() != 0)
-                {
+                if ($this->_profile->getStoreId() != 0) {
                     $productCollection->addWebsiteFilter($this->getWebsiteIds());
                 }
-                if ($this->_productsFilter)
-                {
+                if ($this->_productsFilter) {
                     $productCollection->addIdFilter($this->_productsFilter);
                 }
                 $select = $productCollection->getSelect();
@@ -172,7 +170,7 @@ class Flagbit_MEP_Model_Rule extends Mage_CatalogRule_Model_Rule
                     array(array($this, 'callbackValidateProduct')),
                     array(
                         'attributes' => $this->getCollectedAttributes(),
-                        'product'    => Mage::getModel('catalog/product')->setStoreId( $this->_profile->getStoreId()),
+                        'product' => Mage::getModel('catalog/product')->setStoreId($this->_profile->getStoreId()),
                     )
                 );
             }
@@ -181,7 +179,7 @@ class Flagbit_MEP_Model_Rule extends Mage_CatalogRule_Model_Rule
         return $this->_productIds;
     }
 
-    protected function _walk($query, array $callbacks, array $args=array(), $adapter = null)
+    protected function _walk($query, array $callbacks, array $args = array(), $adapter = null)
     {
         $stmt = $this->_getStatement($query, $adapter);
         $args['idx'] = 0;
@@ -195,9 +193,8 @@ class Flagbit_MEP_Model_Rule extends Mage_CatalogRule_Model_Rule
             }
             $args['idx']++;
             if ($limit = $this->getData('limit')) {
-                if (!is_null($this->_productIds) && count($this->_productIds) == $limit)
-                {
-                    break ;
+                if (!is_null($this->_productIds) && count($this->_productIds) == $limit) {
+                    break;
                 }
             }
         }

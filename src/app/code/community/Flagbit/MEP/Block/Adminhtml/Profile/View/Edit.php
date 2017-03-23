@@ -30,11 +30,11 @@ class Flagbit_MEP_Block_Adminhtml_Profile_View_Edit extends Mage_Adminhtml_Block
 
         $profile_id = Mage::helper('mep')->getCurrentProfileData(true);
 
-        if (! empty($profile_id)) {
+        if (!empty($profile_id)) {
 
             $this->_addButton('Preview', array(
                 'label' => Mage::helper('adminhtml')->__('Preview'),
-                'onclick' => "mepPreviewDialog.openDialog('".$this->getUrl('*/*/preview', array('id' => $profile_id))."')",
+                'onclick' => "mepPreviewDialog.openDialog('" . $this->getUrl('*/*/preview', array('id' => $profile_id)) . "')",
                 'class' => 'go',
             ), 0, 6);
 

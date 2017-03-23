@@ -21,7 +21,8 @@ class Flagbit_MEP_Model_Rule_Condition_Product
      */
     protected $_entityAttributeValues = null;
 
-    public function __construct() {
+    public function __construct()
+    {
         parent::__construct();
         $this->setJsFormObject('mep_conditions_fieldset');
     }
@@ -46,7 +47,8 @@ class Flagbit_MEP_Model_Rule_Condition_Product
         return $this->getData('value_parsed');
     }
 
-    protected function  getAllChildrenCategories($categoriesIds, &$categories) {
+    protected function getAllChildrenCategories($categoriesIds, &$categories)
+    {
         if (!is_array($categoriesIds)) {
             $categoriesIds = explode(',', $categoriesIds);
         }
@@ -399,78 +401,83 @@ class Flagbit_MEP_Model_Rule_Condition_Product
         $result = false;
 
         switch ($op) {
-            case '==': case '!=':
-            if (is_array($value)) {
-                if (is_array($validatedValue)) {
-                    $result = array_intersect($value, $validatedValue);
-                    $result = !empty($result);
+            case '==':
+            case '!=':
+                if (is_array($value)) {
+                    if (is_array($validatedValue)) {
+                        $result = array_intersect($value, $validatedValue);
+                        $result = !empty($result);
+                    } else {
+                        return false;
+                    }
                 } else {
-                    return false;
-                }
-            } else {
-                if (is_array($validatedValue) && $validatedValue == 1) {
-                    $result = array_shift($validatedValue) == $value;
-                } elseif (is_array($validatedValue) && $validatedValue > 1) {
-                    $result = in_array($value, $validatedValue);
-                } else {
-                    $result = $this->_compareValues($validatedValue, $value);
-                }
-            }
-            break;
-
-            case '<=': case '>':
-            if (!is_scalar($validatedValue)) {
-                return false;
-            } else {
-                $result = $validatedValue <= $value;
-            }
-            break;
-
-            case '>=': case '<':
-            if (!is_scalar($validatedValue)) {
-                return false;
-            } else {
-                $result = $validatedValue >= $value;
-            }
-            break;
-
-            case '{}': case '!{}':
-            if (is_scalar($validatedValue) && is_array($value)) {
-                foreach ($value as $item) {
-                    if (stripos($validatedValue,$item)!==false) {
-                        $result = true;
-                        break;
+                    if (is_array($validatedValue) && $validatedValue == 1) {
+                        $result = array_shift($validatedValue) == $value;
+                    } elseif (is_array($validatedValue) && $validatedValue > 1) {
+                        $result = in_array($value, $validatedValue);
+                    } else {
+                        $result = $this->_compareValues($validatedValue, $value);
                     }
                 }
-            } elseif (is_array($value)) {
-                if (is_array($validatedValue)) {
-                    $result = array_intersect($value, $validatedValue);
-                    $result = !empty($result);
-                } else {
-                    return false;
-                }
-            } else {
-                if (is_array($validatedValue)) {
-                    $result = in_array($value, $validatedValue);
-                } else {
-                    $result = $this->_compareValues($value, $validatedValue, false);
-                }
-            }
-            break;
+                break;
 
-            case '()': case '!()':
-            if (is_array($validatedValue)) {
-                $result = count(array_intersect($validatedValue, (array)$value))>0;
-            } else {
-                $value = (array)$value;
-                foreach ($value as $item) {
-                    if ($this->_compareValues($validatedValue, $item)) {
-                        $result = true;
-                        break;
+            case '<=':
+            case '>':
+                if (!is_scalar($validatedValue)) {
+                    return false;
+                } else {
+                    $result = $validatedValue <= $value;
+                }
+                break;
+
+            case '>=':
+            case '<':
+                if (!is_scalar($validatedValue)) {
+                    return false;
+                } else {
+                    $result = $validatedValue >= $value;
+                }
+                break;
+
+            case '{}':
+            case '!{}':
+                if (is_scalar($validatedValue) && is_array($value)) {
+                    foreach ($value as $item) {
+                        if (stripos($validatedValue, $item) !== false) {
+                            $result = true;
+                            break;
+                        }
+                    }
+                } elseif (is_array($value)) {
+                    if (is_array($validatedValue)) {
+                        $result = array_intersect($value, $validatedValue);
+                        $result = !empty($result);
+                    } else {
+                        return false;
+                    }
+                } else {
+                    if (is_array($validatedValue)) {
+                        $result = in_array($value, $validatedValue);
+                    } else {
+                        $result = $this->_compareValues($value, $validatedValue, false);
                     }
                 }
-            }
-            break;
+                break;
+
+            case '()':
+            case '!()':
+                if (is_array($validatedValue)) {
+                    $result = count(array_intersect($validatedValue, (array)$value)) > 0;
+                } else {
+                    $value = (array)$value;
+                    foreach ($value as $item) {
+                        if ($this->_compareValues($validatedValue, $item)) {
+                            $result = true;
+                            break;
+                        }
+                    }
+                }
+                break;
         }
 
         if ('!=' == $op || '>' == $op || '<' == $op || '!{}' == $op || '!()' == $op) {
@@ -507,9 +514,10 @@ class Flagbit_MEP_Model_Rule_Condition_Product
      * @param Varien_Object $object
      * @return mixed
      */
-    protected function _getAttributeValue($object) {
+    protected function _getAttributeValue($object)
+    {
         // just use the parent in case the method change in future versions
-        if (method_exists(get_parent_class($this), '_getAttributeValue') ) {
+        if (method_exists(get_parent_class($this), '_getAttributeValue')) {
             return parent::_getAttributeValue($object);
         }
 
@@ -517,7 +525,7 @@ class Flagbit_MEP_Model_Rule_Condition_Product
         $attrCode = $this->getAttribute();
         $storeId = $object->getStoreId();
         $defaultStoreId = Mage_Core_Model_App::ADMIN_STORE_ID;
-        $productValues  = isset($this->_entityAttributeValues[$object->getId()])
+        $productValues = isset($this->_entityAttributeValues[$object->getId()])
             ? $this->_entityAttributeValues[$object->getId()] : array();
         $defaultValue = isset($productValues[$defaultStoreId])
             ? $productValues[$defaultStoreId] : $object->getData($attrCode);
@@ -542,7 +550,7 @@ class Flagbit_MEP_Model_Rule_Condition_Product
     protected function _prepareDatetimeValue($value, $object)
     {
         // just use the parent in case the method change in future versions
-        if (method_exists(get_parent_class($this), '_prepareDatetimeValue') ) {
+        if (method_exists(get_parent_class($this), '_prepareDatetimeValue')) {
             return parent::_prepareDatetimeValue($value, $object);
         }
 

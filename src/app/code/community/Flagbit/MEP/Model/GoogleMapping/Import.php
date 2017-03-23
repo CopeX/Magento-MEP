@@ -13,8 +13,7 @@ class   Flagbit_MEP_Model_GoogleMapping_Import extends Mage_Core_Model_Abstract
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
         $content = curl_exec($curl);
         curl_close($curl);
-        if (!$content)
-        {
+        if (!$content) {
             throw new Exception(curl_error($curl));
         }
         $this->runImportWithContent($content);
@@ -23,18 +22,17 @@ class   Flagbit_MEP_Model_GoogleMapping_Import extends Mage_Core_Model_Abstract
     public function runImportWithUrls($urls)
     {
         $contents = [];
-        foreach($urls as $locale => $url) {
+        foreach ($urls as $locale => $url) {
             $curl = curl_init($url);
             curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
             $content = curl_exec($curl);
             $httpcode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
             curl_close($curl);
-            if(404 == $httpcode) {
+            if (404 == $httpcode) {
                 continue;
             }
             $contents[$locale] = $content;
-            if (!$content)
-            {
+            if (!$content) {
                 throw new Exception(curl_error($curl));
             }
         }
@@ -42,8 +40,10 @@ class   Flagbit_MEP_Model_GoogleMapping_Import extends Mage_Core_Model_Abstract
         $this->runImportWithContentAndLocale($contents);
     }
 
-    public function runImportWithContentAndLocale($contents) {
-        function getId() {
+    public function runImportWithContentAndLocale($contents)
+    {
+        function getId()
+        {
             static $id = 1;
             return $id++;
         }
@@ -59,17 +59,19 @@ class   Flagbit_MEP_Model_GoogleMapping_Import extends Mage_Core_Model_Abstract
                 'numId' => 0,
                 'childs' => []
             ];
-            foreach($lines as $line) {
+            foreach ($lines as $line) {
                 $line = trim($line);
                 $entries = explode('>', $line);
-                $entries = array_map(function ($v) {return trim($v);}, $entries);
+                $entries = array_map(function ($v) {
+                    return trim($v);
+                }, $entries);
                 $parent = &$result[$locale];
-                foreach($entries as $e) {
-                    if(!isset($parent['childs'])) $parent['childs'] = [];
+                foreach ($entries as $e) {
+                    if (!isset($parent['childs'])) $parent['childs'] = [];
 
                     $id = $this->_getSlug($e) . '_' . $locale;
 
-                    if(!isset($parent['childs'][$id])) {
+                    if (!isset($parent['childs'][$id])) {
                         $list[$id] = [
                             'id' => $id,
                             'numId' => getId(),
@@ -85,7 +87,8 @@ class   Flagbit_MEP_Model_GoogleMapping_Import extends Mage_Core_Model_Abstract
             }
         }
 
-        function saveLines($values) {
+        function saveLines($values)
+        {
             $query = 'INSERT INTO mep_google_taxonomies (taxonomy_id, parent_id, name, slug, locale) VALUES '
                 . implode(',', $values) . ';';
             $resource = Mage::getSingleton('core/resource');
@@ -95,20 +98,20 @@ class   Flagbit_MEP_Model_GoogleMapping_Import extends Mage_Core_Model_Abstract
 
         $counter = 1;
         $values = [];
-        foreach($list as $e) {
+        foreach ($list as $e) {
             $values[] = '("' . $e['numId'] . '",'
-                .'"' . $e['parent']['numId'] . '",'
-                .'"' . $e['name'] . '",'
-                .'"' . $e['id'] . '",'
-                .'"' . $e['locale'] . '")';
-            if(($counter % 20000) == 0) {
+                . '"' . $e['parent']['numId'] . '",'
+                . '"' . $e['name'] . '",'
+                . '"' . $e['id'] . '",'
+                . '"' . $e['locale'] . '")';
+            if (($counter % 10000) == 0) {
                 saveLines($values);
                 $values = [];
             }
             $counter++;
         }
 
-        if(count($values) > 0) {
+        if (count($values) > 0) {
             saveLines($values);
         }
     }
@@ -117,16 +120,13 @@ class   Flagbit_MEP_Model_GoogleMapping_Import extends Mage_Core_Model_Abstract
     {
         $file = explode("\n", $content);
         $taxonomies = array();
-        foreach ($file as $line)
-        {
+        foreach ($file as $line) {
             $reset = true;
-            if ($line[0] == '#' || strlen($line) == 0)
-            {
+            if ($line[0] == '#' || strlen($line) == 0) {
                 continue;
             }
             $lineToArray = explode('>', $line);
-            foreach ($lineToArray as $taxonomy)
-            {
+            foreach ($lineToArray as $taxonomy) {
                 $key = $this->_getSlug($taxonomy);
                 $node = array(
                     'name' => trim($taxonomy),
@@ -138,8 +138,7 @@ class   Flagbit_MEP_Model_GoogleMapping_Import extends Mage_Core_Model_Abstract
                 $taxonomyModel = Mage::getModel('mep/googleTaxonomies');
                 $taxonomyModel->getResource()->load($taxonomyModel, $node['slug'], 'slug');
                 Mage::log($node, null, 'google_import_debug.log');
-                if ($reset)
-                {
+                if ($reset) {
                     if (!array_key_exists($key, $taxonomies)) {
                         $taxonomyModel->setData('parent_id', $node['parent_id']);
                         $taxonomyModel->setData('name', $node['name']);
@@ -150,9 +149,7 @@ class   Flagbit_MEP_Model_GoogleMapping_Import extends Mage_Core_Model_Abstract
                     }
                     $previous = &$taxonomies[$key];
                     $reset = false;
-                }
-                else
-                {
+                } else {
                     $node['parent_id'] = $previous['mysql_id'];
                     if (!array_key_exists($key, $previous['children'])) {
                         $taxonomyModel->setData('parent_id', $node['parent_id']);
@@ -168,9 +165,9 @@ class   Flagbit_MEP_Model_GoogleMapping_Import extends Mage_Core_Model_Abstract
         }
     }
 
-    protected function  _getSlug($taxonomy)
+    protected function _getSlug($taxonomy)
     {
-        $taxonomy = iconv('UTF-8','ASCII//TRANSLIT',$taxonomy);
+        $taxonomy = iconv('UTF-8', 'ASCII//TRANSLIT', $taxonomy);
         $taxonomy = preg_replace('`[^A-Za-z0-9 ]`', '', $taxonomy);
         $taxonomy = str_replace(' ', '_', trim($taxonomy));
         return strtolower($taxonomy);

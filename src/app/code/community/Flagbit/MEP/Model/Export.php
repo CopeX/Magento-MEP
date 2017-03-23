@@ -34,21 +34,21 @@
 class Flagbit_MEP_Model_Export extends Mage_ImportExport_Model_Abstract
 {
     const FILTER_ELEMENT_GROUP = 'export_filter';
-    const FILTER_ELEMENT_SKIP  = 'skip_attr';
+    const FILTER_ELEMENT_SKIP = 'skip_attr';
 
     /**
      * Filter fields types.
      */
     const FILTER_TYPE_SELECT = 'select';
-    const FILTER_TYPE_INPUT  = 'input';
-    const FILTER_TYPE_DATE   = 'date';
+    const FILTER_TYPE_INPUT = 'input';
+    const FILTER_TYPE_DATE = 'date';
     const FILTER_TYPE_NUMBER = 'number';
 
     /**
      * Config keys.
      */
     const CONFIG_KEY_ENTITIES = 'global/mep/export_entities';
-    const CONFIG_KEY_FORMATS  = 'global/mep/export_file_formats';
+    const CONFIG_KEY_FORMATS = 'global/mep/export_file_formats';
 
     /**
      * Entity adapter.
@@ -91,7 +91,7 @@ class Flagbit_MEP_Model_Export extends Mage_ImportExport_Model_Abstract
                         Mage::helper('importexport')->__('Invalid entity model')
                     );
                 }
-                if (! $this->_entityAdapter instanceof Mage_ImportExport_Model_Export_Entity_Abstract) {
+                if (!$this->_entityAdapter instanceof Mage_ImportExport_Model_Export_Entity_Abstract) {
                     Mage::throwException(
                         Mage::helper('importexport')->__('Entity adapter obejct must be an instance of Mage_ImportExport_Model_Export_Entity_Abstract')
                     );
@@ -151,7 +151,7 @@ class Flagbit_MEP_Model_Export extends Mage_ImportExport_Model_Abstract
     {
         if (isset($this->_data[self::FILTER_ELEMENT_GROUP])) {
             $this->addLogComment(Mage::helper('importexport')->__('Begin export of %s', $this->getEntity()));
-            Mage::helper('mep/log')->info('Begin export of '.$this->getEntity(), $this);
+            Mage::helper('mep/log')->info('Begin export of ' . $this->getEntity(), $this);
 
             return $this->_getEntityAdapter()
                 ->setWriter($this->_getWriter())
@@ -193,8 +193,8 @@ class Flagbit_MEP_Model_Export extends Mage_ImportExport_Model_Abstract
         } elseif ('decimal' == $attribute->getBackendType() || 'int' == $attribute->getBackendType()) {
             return self::FILTER_TYPE_NUMBER;
         } elseif ($attribute->isStatic()
-                  || 'varchar' == $attribute->getBackendType()
-                  || 'text' == $attribute->getBackendType()
+            || 'varchar' == $attribute->getBackendType()
+            || 'text' == $attribute->getBackendType()
         ) {
             return self::FILTER_TYPE_INPUT;
         } else {
@@ -259,7 +259,7 @@ class Flagbit_MEP_Model_Export extends Mage_ImportExport_Model_Abstract
      */
     public function getFileName()
     {
-        return $this->getEntity() . '_' . date('Ymd_His') .  '.' . $this->_getWriter()->getFileExtension();
+        return $this->getEntity() . '_' . date('Ymd_His') . '.' . $this->_getWriter()->getFileExtension();
     }
 
     /**

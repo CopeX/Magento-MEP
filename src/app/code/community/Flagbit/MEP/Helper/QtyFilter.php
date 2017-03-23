@@ -15,18 +15,18 @@ class Flagbit_MEP_Helper_QtyFilter extends Varien_Data_Form_Element_Text
         }
 
         $operator = array(
-            ''    => '',
-            '=='  => Mage::helper('rule')->__('is'),
-            '!='  => Mage::helper('rule')->__('is not'),
-            '>='  => Mage::helper('rule')->__('equals or greater than'),
-            '<='  => Mage::helper('rule')->__('equals or less than'),
-            '>'   => Mage::helper('rule')->__('greater than'),
-            '<'   => Mage::helper('rule')->__('less than'),
+            '' => '',
+            '==' => Mage::helper('rule')->__('is'),
+            '!=' => Mage::helper('rule')->__('is not'),
+            '>=' => Mage::helper('rule')->__('equals or greater than'),
+            '<=' => Mage::helper('rule')->__('equals or less than'),
+            '>' => Mage::helper('rule')->__('greater than'),
+            '<' => Mage::helper('rule')->__('less than'),
         );
 
         $html = '<select name="' . $this->getData('dropdownName') . '" onchange="toggleQtyFilterVisibility(this)"' . $elementAttributeHtml . ' style="' . $this->getData('dropdownStyle') . '">';
         foreach ($operator as $key => $value) {
-            $html .= '<option value="' . $key . '" ' . ($this->getData('dropdownValue')==$key ? 'selected' : '') . '>' . $value . '</option>';
+            $html .= '<option value="' . $key . '" ' . ($this->getData('dropdownValue') == $key ? 'selected' : '') . '>' . $value . '</option>';
         }
         $html .= '</select>&nbsp;&nbsp;';
         $html .= parent::getElementHtml();
@@ -47,7 +47,8 @@ class Flagbit_MEP_Helper_QtyFilter extends Varien_Data_Form_Element_Text
         return $this;
     }
 
-    public function  getOperatorForCollectionFilter($operator) {
+    public function getOperatorForCollectionFilter($operator)
+    {
         $operators = array(
             '==' => 'eq',
             '!=' => 'neq',
@@ -59,7 +60,8 @@ class Flagbit_MEP_Helper_QtyFilter extends Varien_Data_Form_Element_Text
         return $operators[$operator];
     }
 
-    public function  getOperatorForSqlFilter($operator) {
+    public function getOperatorForSqlFilter($operator)
+    {
         $operators = array(
             '==' => '=',
             '!=' => '!=',

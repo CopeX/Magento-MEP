@@ -32,8 +32,7 @@ class Twig_Node_Import extends Twig_Node
             ->addDebugInfo($this)
             ->write('')
             ->subcompile($this->getNode('var'))
-            ->raw(' = ')
-        ;
+            ->raw(' = ');
 
         if ($this->getNode('expr') instanceof Twig_Node_Expression_Name && '_self' === $this->getNode('expr')->getAttribute('name')) {
             $compiler->raw("\$this");
@@ -41,8 +40,7 @@ class Twig_Node_Import extends Twig_Node
             $compiler
                 ->raw('$this->env->loadTemplate(')
                 ->subcompile($this->getNode('expr'))
-                ->raw(")")
-            ;
+                ->raw(")");
         }
 
         $compiler->raw(";\n");

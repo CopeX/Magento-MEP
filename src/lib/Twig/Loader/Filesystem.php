@@ -61,8 +61,8 @@ class Twig_Loader_Filesystem implements Twig_LoaderInterface, Twig_ExistsLoaderI
     /**
      * Sets the paths where templates are stored.
      *
-     * @param string|array $paths     A path or an array of paths where to look for templates
-     * @param string       $namespace A path namespace
+     * @param string|array $paths A path or an array of paths where to look for templates
+     * @param string $namespace A path namespace
      */
     public function setPaths($paths, $namespace = self::MAIN_NAMESPACE)
     {
@@ -79,7 +79,7 @@ class Twig_Loader_Filesystem implements Twig_LoaderInterface, Twig_ExistsLoaderI
     /**
      * Adds a path where templates are stored.
      *
-     * @param string $path      A path where to look for templates
+     * @param string $path A path where to look for templates
      * @param string $namespace A path name
      *
      * @throws Twig_Error_Loader
@@ -99,7 +99,7 @@ class Twig_Loader_Filesystem implements Twig_LoaderInterface, Twig_ExistsLoaderI
     /**
      * Prepends a path where templates are stored.
      *
-     * @param string $path      A path where to look for templates
+     * @param string $path A path where to look for templates
      * @param string $namespace A path name
      *
      * @throws Twig_Error_Loader
@@ -143,7 +143,7 @@ class Twig_Loader_Filesystem implements Twig_LoaderInterface, Twig_ExistsLoaderI
      */
     public function exists($name)
     {
-        $name = (string) $name;
+        $name = (string)$name;
         if (isset($this->cache[$name])) {
             return true;
         }
@@ -167,7 +167,7 @@ class Twig_Loader_Filesystem implements Twig_LoaderInterface, Twig_ExistsLoaderI
 
     protected function findTemplate($name)
     {
-        $name = (string) $name;
+        $name = (string)$name;
 
         // normalize name
         $name = preg_replace('#/{2,}#', '/', strtr($name, '\\', '/'));
@@ -194,8 +194,8 @@ class Twig_Loader_Filesystem implements Twig_LoaderInterface, Twig_ExistsLoaderI
         }
 
         foreach ($this->paths[$namespace] as $path) {
-            if (is_file($path.'/'.$shortname)) {
-                return $this->cache[$name] = $path.'/'.$shortname;
+            if (is_file($path . '/' . $shortname)) {
+                return $this->cache[$name] = $path . '/' . $shortname;
             }
         }
 

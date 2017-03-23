@@ -22,7 +22,7 @@ class Flagbit_MEP_Model_Mapping extends Mage_Core_Model_Abstract
      */
     protected function _beforeSave()
     {
-        if(is_array($this->getAttributeCode())){
+        if (is_array($this->getAttributeCode())) {
             $this->setAttributeCode(implode(',', $this->getAttributeCode()));
         }
         $this->setInheritance(Mage::app()->getRequest()->getParam('inheritance', 0));
@@ -40,11 +40,10 @@ class Flagbit_MEP_Model_Mapping extends Mage_Core_Model_Abstract
      */
     protected function _afterLoad()
     {
-        if(!$this->getId() && !$this->getPosition())
-        {
+        if (!$this->getId() && !$this->getPosition()) {
             $this->setPosition($this->_getNextPosition());
         }
-        if(strpos($this->getAttributeCode(), ',') !== false){
+        if (strpos($this->getAttributeCode(), ',') !== false) {
             $this->setAttributeCode(explode(',', $this->getAttributeCode()));
         }
         $this->setOptions(unserialize($this->getOptions()));
@@ -57,7 +56,7 @@ class Flagbit_MEP_Model_Mapping extends Mage_Core_Model_Abstract
     protected function _getNextPosition()
     {
         $position = 100;
-        if($profileId = Mage::helper('mep')->getCurrentProfileData(true)){
+        if ($profileId = Mage::helper('mep')->getCurrentProfileData(true)) {
             $mapping = $this->getCollection();
             $mapping->addFieldToFilter('profile_id', array('eq' => $profileId));
             $mapping->setOrder('position', 'DESC');
@@ -75,13 +74,13 @@ class Flagbit_MEP_Model_Mapping extends Mage_Core_Model_Abstract
     public function getAttributeCodeAsArray()
     {
         $result = $this->getAttributeCode();
-        if(!is_array($this->getAttributeCode())){
-            if($this->getAttributeCode() === NULL){
+        if (!is_array($this->getAttributeCode())) {
+            if ($this->getAttributeCode() === NULL) {
                 $result = array();
-            }else{
-                if(strpos($this->getAttributeCode(), ',') === false){
+            } else {
+                if (strpos($this->getAttributeCode(), ',') === false) {
                     $result = array($this->getAttributeCode());
-                }else{
+                } else {
                     $result = explode(',', $this->getAttributeCode());
                 }
             }
@@ -89,7 +88,8 @@ class Flagbit_MEP_Model_Mapping extends Mage_Core_Model_Abstract
         return $result;
     }
 
-    public function getOption($key) {
+    public function getOption($key)
+    {
         $options = $this->getOptions();
         if (isset($options[$key])) {
             return $options[$key];

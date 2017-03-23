@@ -1,4 +1,5 @@
 <?php
+
 class Flagbit_MEP_Block_Adminhtml_Shipping_View_Edit_Tab_General extends Mage_Adminhtml_Block_Widget_Form
 {
     /**

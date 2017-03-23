@@ -56,41 +56,41 @@ class Flagbit_MEP_Block_Adminhtml_Profile_View_Grid extends Mage_Adminhtml_Block
         ));
 
         $this->addColumn('store_id', array(
-            'header'        => Mage::helper('mep')->__('Store View'),
-            'index'         => 'store_id',
-            'type'          => 'store',
-            'store_all'     => true,
-            'store_view'    => true,
-            'sortable'      => true,
+            'header' => Mage::helper('mep')->__('Store View'),
+            'index' => 'store_id',
+            'type' => 'store',
+            'store_all' => true,
+            'store_view' => true,
+            'sortable' => true,
         ));
 
         $this->addColumn('Status', array(
-            'header'    => Mage::helper('cms')->__('Status'),
-            'index'     => 'status',
-            'type'      => 'options',
-            'options'   => array(
-                        0 => Mage::helper('mep')->__('Disabled'),
-                        1 => Mage::helper('mep')->__('Enabled'),
-                    )
+            'header' => Mage::helper('cms')->__('Status'),
+            'index' => 'status',
+            'type' => 'options',
+            'options' => array(
+                0 => Mage::helper('mep')->__('Disabled'),
+                1 => Mage::helper('mep')->__('Enabled'),
+            )
         ));
 
         $this->addColumn('Product Count', array(
-            'header'    => Mage::helper('cms')->__('Product Count'),
-            'index'     => 'product_count',
+            'header' => Mage::helper('cms')->__('Product Count'),
+            'index' => 'product_count',
             'filter' => false,
             'sortable' => false,
         ));
 
         $this->addColumn('Execution Time', array(
-            'header'    => Mage::helper('cms')->__('Execution Time'),
-            'index'     => 'mep_cron_start_time',
-            'renderer'  => 'mep/adminhtml_profile_view_grid_cron_renderer'
+            'header' => Mage::helper('cms')->__('Execution Time'),
+            'index' => 'mep_cron_start_time',
+            'renderer' => 'mep/adminhtml_profile_view_grid_cron_renderer'
         ));
 
         $this->addColumn('Execution Frequency', array(
-            'header'    => Mage::helper('cms')->__('Execution Frequency'),
-            'index'     => 'mep_cron_frequency',
-            'renderer'  => 'mep/adminhtml_profile_view_grid_cron_renderer'
+            'header' => Mage::helper('cms')->__('Execution Frequency'),
+            'index' => 'mep_cron_frequency',
+            'renderer' => 'mep/adminhtml_profile_view_grid_cron_renderer'
         ));
 
         $this->addColumn('action', array(

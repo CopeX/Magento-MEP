@@ -1,10 +1,10 @@
 var mepAttributeSettingsDialog = {
-    getDivHtml: function(id, html) {
+    getDivHtml: function (id, html) {
         if (!html) html = '';
         return '<div id="' + id + '">' + html + '</div>';
     },
 
-    onAjaxSuccess: function(transport) {
+    onAjaxSuccess: function (transport) {
         if (transport.responseText.isJSON()) {
             var response = transport.responseText.evalJSON()
             if (response.error) {
@@ -15,38 +15,38 @@ var mepAttributeSettingsDialog = {
         }
     },
 
-    openDialog: function(widgetUrl) {
+    openDialog: function (widgetUrl) {
         if ($('widget_window') && typeof(Windows) != 'undefined') {
             Windows.focus('widget_window');
             return;
         }
         this.dialogWindow = Dialog.info(null, {
-            draggable:false,
-            resizable:false,
-            closable:true,
-            className:'magento',
-            windowClassName:"attr-popup-window",
-            title:Translator.translate('Attribute Settings'),
-            top:100,
-            width:400,
+            draggable: false,
+            resizable: false,
+            closable: true,
+            className: 'magento',
+            windowClassName: "attr-popup-window",
+            title: Translator.translate('Attribute Settings'),
+            top: 100,
+            width: 400,
             //height:450,
-            zIndex:1000,
-            recenterAuto:false,
-            hideEffect:Element.hide,
-            showEffect:Element.show,
-            id:'widget_window',
+            zIndex: 1000,
+            recenterAuto: false,
+            hideEffect: Element.hide,
+            showEffect: Element.show,
+            id: 'widget_window',
             onClose: this.closeDialog.bind(this)
         });
         new Ajax.Updater('modal_dialog_message', widgetUrl, {
             evalScripts: true,
-            onComplete: function(response) {
+            onComplete: function (response) {
                 $('widget_window').setStyle({
                     display: 'block'
                 });
             }
         });
     },
-    closeDialog: function(window) {
+    closeDialog: function (window) {
         if (!window) {
             window = this.dialogWindow;
         }
@@ -60,36 +60,36 @@ var mepAttributeSettingsDialog = {
 
 
 var mepPreviewDialog = {
-    getDivHtml: function(id, html) {
+    getDivHtml: function (id, html) {
         if (!html) html = '';
         return '<div id="' + id + '">' + html + '</div>';
     },
 
-    openDialog: function(widgetUrl) {
+    openDialog: function (widgetUrl) {
         if ($('widget_window') && typeof(Windows) != 'undefined') {
             Windows.focus('widget_window');
             return;
         }
         this.dialogWindow = Dialog.info(null, {
-            draggable:false,
-            resizable:false,
-            closable:true,
-            className:'magento',
-            windowClassName:"popup-window",
-            title:Translator.translate('Export Preview'),
-            top:0,
-            width:100,
+            draggable: false,
+            resizable: false,
+            closable: true,
+            className: 'magento',
+            windowClassName: "popup-window",
+            title: Translator.translate('Export Preview'),
+            top: 0,
+            width: 100,
             //height:450,
-            zIndex:1000,
-            recenterAuto:false,
-            hideEffect:Element.hide,
-            showEffect:Element.show,
-            id:'widget_window',
+            zIndex: 1000,
+            recenterAuto: false,
+            hideEffect: Element.hide,
+            showEffect: Element.show,
+            id: 'widget_window',
             onClose: this.closeDialog.bind(this)
         });
         new Ajax.Updater('modal_dialog_message', widgetUrl, {
             evalScripts: true,
-            onComplete: function(response) {
+            onComplete: function (response) {
                 var table = new TableKit('preview-table', {
                     editable: false,
                     resizable: false
@@ -103,7 +103,7 @@ var mepPreviewDialog = {
             }
         });
     },
-    closeDialog: function(window) {
+    closeDialog: function (window) {
         if (!window) {
             window = this.dialogWindow;
         }
@@ -124,13 +124,13 @@ function toggleApplyVisibility(select) {
         $(select).next('select').addClassName('no-display');
         $(select).next('select').addClassName('ignore-validate');
         var options = $(select).next('select').options;
-        for( var i=0; i < options.length; i++) {
+        for (var i = 0; i < options.length; i++) {
             options[i].selected = false;
         }
     }
 }
 
-function    toggleQtyFilterVisibility(select) {
+function toggleQtyFilterVisibility(select) {
     if ($(select).value == '') {
         $(select).next('input').addClassName('no-display');
         $(select).next('input').addClassName('ignore-validate');
@@ -142,32 +142,16 @@ function    toggleQtyFilterVisibility(select) {
     }
 }
 
-document.observe('dom:loaded', function() {
-    if (jQuery( "#delimiter").length) {
-        var delimiter = '\\' + jQuery( "#delimiter").val().replace(/(\\)/gm, '\\');
-        jQuery('#twig_header_template').attr('spellcheck', false);
-        jQuery('#twig_content_template').attr('spellcheck', false);
-        jQuery( "#delimiter" ).change(function() {
-            delimiter = '\\' + jQuery( "#delimiter").val().replace(/(\\)/gm, '\\');
-            jQuery('#twig_header_template').clone().insertAfter(jQuery('#twig_header_template').parent());
-            jQuery('#twig_header_template').parent().remove();
-            jQuery('#twig_content_template').clone().insertAfter(jQuery('#twig_content_template').parent());
-            jQuery('#twig_content_template').parent().remove();
-            jQuery('#twig_header_template').highlightTextarea({
-                words: {
-                    color: '#00FF11',
-                    words: [delimiter]
-                },
-                resizable: true
-            });
-            jQuery('#twig_content_template').highlightTextarea({
-                words: {
-                    color: '#00FF11',
-                    words: [delimiter]
-                },
-                resizable: true
-            });
-        });
+document.observe('dom:loaded', function () {
+    var delimiter = '\\' + jQuery("#delimiter").val().replace(/(\\)/gm, '\\');
+    jQuery('#twig_header_template').attr('spellcheck', false);
+    jQuery('#twig_content_template').attr('spellcheck', false);
+    jQuery("#delimiter").change(function () {
+        delimiter = '\\' + jQuery("#delimiter").val().replace(/(\\)/gm, '\\');
+        jQuery('#twig_header_template').clone().insertAfter(jQuery('#twig_header_template').parent());
+        jQuery('#twig_header_template').parent().remove();
+        jQuery('#twig_content_template').clone().insertAfter(jQuery('#twig_content_template').parent());
+        jQuery('#twig_content_template').parent().remove();
         jQuery('#twig_header_template').highlightTextarea({
             words: {
                 color: '#00FF11',
@@ -182,5 +166,19 @@ document.observe('dom:loaded', function() {
             },
             resizable: true
         });
-    }
+    });
+    jQuery('#twig_header_template').highlightTextarea({
+        words: {
+            color: '#00FF11',
+            words: [delimiter]
+        },
+        resizable: true
+    });
+    jQuery('#twig_content_template').highlightTextarea({
+        words: {
+            color: '#00FF11',
+            words: [delimiter]
+        },
+        resizable: true
+    });
 });

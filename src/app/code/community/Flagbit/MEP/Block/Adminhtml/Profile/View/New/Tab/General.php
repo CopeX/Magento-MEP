@@ -1,4 +1,5 @@
 <?php
+
 class Flagbit_MEP_Block_Adminhtml_Profile_View_New_Tab_General extends Mage_Adminhtml_Block_Widget_Form
 {
     /**

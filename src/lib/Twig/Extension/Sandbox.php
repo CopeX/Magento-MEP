@@ -8,6 +8,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 class Twig_Extension_Sandbox extends Twig_Extension
 {
     protected $sandboxedGlobally;
@@ -16,7 +17,7 @@ class Twig_Extension_Sandbox extends Twig_Extension
 
     public function __construct(Twig_Sandbox_SecurityPolicyInterface $policy, $sandboxed = false)
     {
-        $this->policy            = $policy;
+        $this->policy = $policy;
         $this->sandboxedGlobally = $sandboxed;
     }
 

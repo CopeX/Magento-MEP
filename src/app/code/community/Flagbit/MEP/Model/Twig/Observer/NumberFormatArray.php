@@ -1,6 +1,7 @@
 <?php
 
-class Flagbit_MEP_Model_Twig_Observer_NumberFormatArray {
+class Flagbit_MEP_Model_Twig_Observer_NumberFormatArray
+{
 
     protected $_adapter;
 
@@ -9,7 +10,8 @@ class Flagbit_MEP_Model_Twig_Observer_NumberFormatArray {
      *
      * @param Varien_Event_Observer $observer
      */
-    public function addNumberFormatArray($observer) {
+    public function addNumberFormatArray($observer)
+    {
         $twig = $observer->getTwig();
         $policy = $observer->getPolicy();
         $this->_adapter = $observer->getAdapter();
@@ -27,7 +29,8 @@ class Flagbit_MEP_Model_Twig_Observer_NumberFormatArray {
      * @param string $thousands_sep
      * @return string
      */
-    public function numberFormatArray($numbers , $decimals = 0 , $dec_point = '.' , $thousands_sep = ',') {
+    public function numberFormatArray($numbers, $decimals = 0, $dec_point = '.', $thousands_sep = ',')
+    {
         $delimiter = $this->_adapter->getConfigurableDelimiter();
         $numbersArray = explode($delimiter, $numbers);
         if (is_array($numbersArray)) {
