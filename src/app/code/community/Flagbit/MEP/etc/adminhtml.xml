@@ -28,4 +28,34 @@
             </children>
         </system>
     </menu>
+    <acl>
+        <resources>
+            <admin>
+                <children>
+                    <system translate="title" module="mep">
+                        <children>
+                            <mep translate="title">
+                                <title>MEP configuration</title>
+                                <sort_order>1</sort_order>
+                                <children>
+                                    <export>
+                                        <title>MEP Export-Profiles</title>
+                                    </export>
+                                    <google>
+                                        <title>Google Mapping</title>
+                                    </google>
+                                    <shipping>
+                                        <title>Shipping Mapping</title>
+                                    </shipping>
+                                    <attribute>
+                                        <title>Attribute Mapping</title>
+                                    </attribute>
+                                </children>
+                            </mep>
+                        </children>
+                    </system>
+                </children>
+            </admin>
+        </resources>
+    </acl>
 </config>
