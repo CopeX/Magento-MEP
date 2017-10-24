@@ -25,7 +25,7 @@ class Flagbit_MEP_Adminhtml_MepController extends Mage_Adminhtml_Controller_Acti
      */
     protected function _isAllowed()
     {
-        return Mage::getSingleton('admin/session')->isAllowed('system/convert/export');
+        return Mage::getSingleton('admin/session')->isAllowed('system/mep');
     }
 
     public function indexAction()

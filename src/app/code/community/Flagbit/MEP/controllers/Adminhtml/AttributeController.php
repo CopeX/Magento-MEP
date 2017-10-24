@@ -2,6 +2,17 @@
 
 class Flagbit_MEP_Adminhtml_AttributeController extends Mage_Adminhtml_Controller_Action
 {
+
+    /**
+     * Check access (in the ACL) for current user
+     *
+     * @return bool
+     */
+    protected function _isAllowed()
+    {
+        return Mage::getSingleton('admin/session')->isAllowed('system/mep/attribute');
+    }
+
     /**
      * _initAction
      *
